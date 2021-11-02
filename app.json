@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "jagoank3",
+    "slug": "jagoank3",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "jagoank3"
+}
