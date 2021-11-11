@@ -101,22 +101,33 @@ export default function DashboardScreen(props){
                                 <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"white",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>MODUL PELATIHAN</Text>
                             </LinearGradient>
                         </Pressable>
-                        <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
-                            <View style={{height:EStyleSheet.value("35rem"),width:EStyleSheet.value("35rem")}}>
-                                <Svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 244.742 244.742"
-                                    height="100%" width="100%"
-                                    style={{backgroundColor:"white"}}
-                                    >
-                                    <Path fill="#24b596" d="M243.37 85.341l-45.651-65.307a7.608 7.608 0 00-6.236-3.249H55.796a7.6 7.6 0 00-6.122 3.092L1.486 85.184A7.618 7.618 0 000 89.701c0 15.062 10.987 27.581 25.359 30.039v84.546c0 13.051 10.619 23.67 23.67 23.67h148.58c13.051 0 23.668-10.619 23.668-23.67V119.23c12.179-3.125 21.454-13.571 22.775-26.366a7.608 7.608 0 00-.682-7.523zm-63.298 127.4H148.37v-64.99h31.702v64.99zm25.987-8.453c.003 4.662-3.791 8.453-8.447 8.453h-2.323v-72.598a7.609 7.609 0 00-7.609-7.609h-46.919a7.609 7.609 0 00-7.609 7.609v72.598H49.029c-4.662 0-8.453-3.792-8.453-8.453v-85.802a30.627 30.627 0 0012.833-8.648c5.595 6.356 13.789 10.37 22.899 10.37 9.11 0 17.304-4.015 22.899-10.37 5.595 6.356 13.789 10.37 22.899 10.37 9.113 0 17.307-4.015 22.902-10.37 5.595 6.356 13.789 10.37 22.899 10.37 9.11 0 17.304-4.015 22.899-10.37a30.542 30.542 0 0015.253 9.361v85.089zm7.65-99.296c-8.43 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-8.431 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.293 15.291s-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-8.431 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-7.659 0-14.02-5.658-15.123-13.016l44.251-59.973H187.52l41.406 59.233c-.774 7.715-7.304 13.756-15.217 13.756z" />
-                                    <Path fill="#24b596" d="M112.13 132.535H60.234a7.609 7.609 0 00-7.609 7.609V187.7a7.609 7.609 0 007.609 7.609h51.895a7.609 7.609 0 007.609-7.609v-47.556a7.608 7.608 0 00-7.608-7.609zm-7.609 47.556H67.843v-32.339h36.678v32.339z" />
-                                    </Svg>
+                        <Pressable
+                        onPress={()=>{
+                            props.navigation.navigate("Shop");
+                        }}
+                        >
+                            <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
+                                <View style={{height:EStyleSheet.value("35rem"),width:EStyleSheet.value("35rem")}}>
+                                    <Svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 244.742 244.742"
+                                        height="100%" width="100%"
+                                        style={{backgroundColor:"white"}}
+                                        >
+                                        <Path fill="#24b596" d="M243.37 85.341l-45.651-65.307a7.608 7.608 0 00-6.236-3.249H55.796a7.6 7.6 0 00-6.122 3.092L1.486 85.184A7.618 7.618 0 000 89.701c0 15.062 10.987 27.581 25.359 30.039v84.546c0 13.051 10.619 23.67 23.67 23.67h148.58c13.051 0 23.668-10.619 23.668-23.67V119.23c12.179-3.125 21.454-13.571 22.775-26.366a7.608 7.608 0 00-.682-7.523zm-63.298 127.4H148.37v-64.99h31.702v64.99zm25.987-8.453c.003 4.662-3.791 8.453-8.447 8.453h-2.323v-72.598a7.609 7.609 0 00-7.609-7.609h-46.919a7.609 7.609 0 00-7.609 7.609v72.598H49.029c-4.662 0-8.453-3.792-8.453-8.453v-85.802a30.627 30.627 0 0012.833-8.648c5.595 6.356 13.789 10.37 22.899 10.37 9.11 0 17.304-4.015 22.899-10.37 5.595 6.356 13.789 10.37 22.899 10.37 9.113 0 17.307-4.015 22.902-10.37 5.595 6.356 13.789 10.37 22.899 10.37 9.11 0 17.304-4.015 22.899-10.37a30.542 30.542 0 0015.253 9.361v85.089zm7.65-99.296c-8.43 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-8.431 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.293 15.291s-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-8.431 0-15.291-6.86-15.291-15.291a7.609 7.609 0 10-15.218 0c0 8.433-6.86 15.291-15.291 15.291-7.659 0-14.02-5.658-15.123-13.016l44.251-59.973H187.52l41.406 59.233c-.774 7.715-7.304 13.756-15.217 13.756z" />
+                                        <Path fill="#24b596" d="M112.13 132.535H60.234a7.609 7.609 0 00-7.609 7.609V187.7a7.609 7.609 0 007.609 7.609h51.895a7.609 7.609 0 007.609-7.609v-47.556a7.608 7.608 0 00-7.608-7.609zm-7.609 47.556H67.843v-32.339h36.678v32.339z" />
+                                        </Svg>
+                                </View>
+                                <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>SHOP</Text>
                             </View>
-                            <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>SHOP</Text>
-                        </View>
+                        </Pressable>
                     </View>
                     <View style={{flexDirection:"row",marginBottom:EStyleSheet.value("25rem")}}>
+                        <Pressable
+                        onPress={()=>{
+                            props.navigation.navigate("Artikel");
+                        }}
+                        >
                         <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
                             <View style={{height:EStyleSheet.value("40rem"),width:EStyleSheet.value("40rem")}}>
                                     <Svg
@@ -132,6 +143,7 @@ export default function DashboardScreen(props){
                             </View>
                             <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>ARTIKEL</Text>
                         </View>
+                        </Pressable>
                         <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
                             <View style={{height:EStyleSheet.value("40rem"),width:EStyleSheet.value("40rem")}}>
                                 <Svg

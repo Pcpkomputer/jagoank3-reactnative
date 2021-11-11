@@ -37,7 +37,7 @@ export default function DetailModulPelatihanScreen(props){
                         <View style={{paddingHorizontal:EStyleSheet.value("10rem"),paddingLeft:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center"}}>
                             <Ionicons name="search" size={EStyleSheet.value("18rem")} color="rgba(0,0,0,0.3)" />
                         </View>
-                        <TextInput placeholder="Cari..." style={{height:EStyleSheet.value("35rem"),color:"grey",flex:1}}></TextInput>
+                        <TextInput placeholder="Cari Modul..." style={{height:EStyleSheet.value("35rem"),color:"grey",flex:1}}></TextInput>
                         <View style={{paddingHorizontal:EStyleSheet.value("5rem"),paddingRight:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center"}}>
                             <AntDesign name="closecircle" size={EStyleSheet.value("18rem")} color="rgba(0,0,0,0.3)" />
                         </View>

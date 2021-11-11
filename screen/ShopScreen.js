@@ -21,7 +21,7 @@ let shadow = {
     elevation: 5,
 }
 
-export default function ModulPelatihanScreen(props){
+export default function ShopScreen(props){
 
     let [dataLoaded, setDataLoaded] = useState(false);
 
@@ -37,7 +37,7 @@ export default function ModulPelatihanScreen(props){
             <View style={{...shadow,backgroundColor:"white",flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem"),alignItems:"center",height:EStyleSheet.value("55rem")}}>
                 <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Modul Pelatihan</Text>
+                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Shop</Text>
                 </View>
             </View>
             {
@@ -48,53 +48,37 @@ export default function ModulPelatihanScreen(props){
                         <View style={{paddingHorizontal:EStyleSheet.value("10rem"),paddingLeft:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center"}}>
                             <Ionicons name="search" size={EStyleSheet.value("18rem")} color="rgba(0,0,0,0.3)" />
                         </View>
-                        <TextInput placeholder="Cari..." style={{height:EStyleSheet.value("35rem"),color:"grey",flex:1}}></TextInput>
+                        <TextInput placeholder="Cari Produk..." style={{height:EStyleSheet.value("35rem"),color:"grey",flex:1}}></TextInput>
                         <View style={{paddingHorizontal:EStyleSheet.value("5rem"),paddingRight:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center"}}>
                             <AntDesign name="closecircle" size={EStyleSheet.value("18rem")} color="rgba(0,0,0,0.3)" />
                         </View>
                     </View>
                 </View>
+                {/* <View style={{backgroundColor:"red",marginHorizontal:EStyleSheet.value("20rem")}}><Text>debug</Text></View> */}
                 <FlatList
+                numColumns={2}
                 contentContainerStyle={{paddingHorizontal:EStyleSheet.value("20rem")}}
                 keyExtractor={(item,index)=>`modulpelatihan-${index}`}
-                data={[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}
+                data={["tes123","Member Card Gratis + E-Card Flazz + Jaket Bomber Paket A","Member Card Gratis + E-Card Flazz + Jaket Bombeasdasdsadsadsadsadsadadsadr Paket A",4,5,6,7,8,9,10,11,12,13,14,15]}
                 renderItem={({item,index})=>{
                     return (
-                        <Pressable
-                        onPress={()=>{
-                            props.navigation.navigate("DetailModulPelatihan");
-                        }}
-                        >
-                        <LinearGradient 
-                        colors={['#24b596', '#04a280', '#04a280']}
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 1, y: 1 }}
-                        style={{backgroundColor:"#24b596",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),display:"flex",flexDirection:"row"}}>
-                            <View style={{width:EStyleSheet.value("70rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("60rem")}}>
-                                        <Svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 489.9 489.9"
-                                        style={{backgroundColor:"#24b596"}}
-                                        height={EStyleSheet.value("40rem")} 
-                                        width={EStyleSheet.value("40rem")}
-                                        >
-                                        <Path fill="white" d="M131.75 409.1c-28.8 0-52.1 18.3-52.1 40.4 0 22.6 23.3 40.4 52.1 40.4h278.4c-22.6-24.1-22.6-56.8 0-80.9h-278.4v.1zM120.15 1.9c-23.3 7-40.4 32.7-40.4 63.8v342.2c10.5-9.3 24.9-15.9 40.4-17.9V1.9zM244.95 0v99.2l-40.1-25.3-40 25.3V0h-24.9v388.9h270.3V0z" />
-                                        </Svg>
+                        <View style={{backgroundColor:"white",overflow:"hidden",borderRadius:EStyleSheet.value("15rem"),borderWidth:1.5,borderColor:"#e8e8e8",marginBottom:EStyleSheet.value("15rem"),width:EStyleSheet.value('162.5rem'),marginRight:EStyleSheet.value("15rem")}}>
+                            <View style={{backgroundColor:"whitesmoke",height:EStyleSheet.value("140rem")}}>
+                                <Text>123</Text>
                             </View>
-                            <View style={{flex:1,justifyContent:"center"}}>
-                                <Text style={{color:"white",marginBottom:EStyleSheet.value("2rem"),fontSize:EStyleSheet.value("10rem")}}>SERTIFIKASI</Text>
-                                <Text numberOfLines={1} style={{fontWeight:"bold",color:"white"}}>Sertifikasi Kemnaker RI</Text>
+                            <View style={{marginTop:EStyleSheet.value("10rem"),height:EStyleSheet.value("60rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
+                                <Text numberOfLines={3}>{item}</Text>
                             </View>
-                            <LinearGradient 
-                              colors={['#24b596', '#04a280', '#04a280']}
-                              start={{ x: 0, y: 1 }}
-                              end={{ x: 1, y: 1 }}
-                            style={{width:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",borderTopLeftRadius:EStyleSheet.value("10rem"),borderBottomLeftRadius:EStyleSheet.value("10rem")}}>
-                                <Text style={{color:"white",fontSize:EStyleSheet.value("15rem")}}>24</Text>
-                                <Text style={{color:"white",marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("11rem")}}>MODUL</Text>
-                            </LinearGradient>
-                        </LinearGradient>
-                        </Pressable>
+                            <View style={{marginTop:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
+                                <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem")}}>1 pcs, Harga</Text>
+                            </View>
+                            <View style={{marginTop:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
+                                <Text style={{fontWeight:"bold"}}>Rp. 300000</Text>
+                            </View>
+                            <View style={{backgroundColor:"rgb(38, 180, 149)",flex:1,overflow:"hidden",marginTop:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center",padding:EStyleSheet.value("15rem")}}>
+                                <Text numberOfLines={1} style={{fontSize:EStyleSheet.value("13rem"),color:"white"}}>Tambah Ke Keranjang</Text>
+                            </View>
+                        </View>
                       )
                 }}
                 />

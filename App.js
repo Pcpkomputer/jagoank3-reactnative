@@ -9,6 +9,8 @@ import DaftarScreen from './screen/DaftarScreen';
 import DashboardScreen from './screen/DashboardScreen';
 import ModulPelatihanScreen from './screen/ModulPelatihanScreen';
 import DetailModulPelatihanScreen from './screen/DetailModulPelatihanScreen';
+import ShopScreen from './screen/ShopScreen';
+import ArtikelScreen from './screen/ArtikelScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -179,6 +181,20 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={DetailModulPelatihanScreen} />
+       <Stack.Screen 
+      name="Shop" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={ShopScreen} />
+        <Stack.Screen 
+      name="Artikel" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={ArtikelScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   )
