@@ -13,12 +13,12 @@ let shadow = {
     shadowColor: "#000",
     shadowOffset: {
         width: 0,
-        height: 2,
+        height: 1,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 1.84,
 
-    elevation: 5,
+    elevation: 3,
 }
 
 export default function ShopScreen(props){
@@ -62,7 +62,7 @@ export default function ShopScreen(props){
                 data={["tes123","Member Card Gratis + E-Card Flazz + Jaket Bomber Paket A","Member Card Gratis + E-Card Flazz + Jaket Bombeasdasdsadsadsadsadsadadsadr Paket A",4,5,6,7,8,9,10,11,12,13,14,15]}
                 renderItem={({item,index})=>{
                     return (
-                        <View style={{backgroundColor:"white",overflow:"hidden",borderRadius:EStyleSheet.value("15rem"),borderWidth:1.5,borderColor:"#e8e8e8",marginBottom:EStyleSheet.value("15rem"),width:EStyleSheet.value('162.5rem'),marginRight:EStyleSheet.value("15rem")}}>
+                        <View style={{...shadow,backgroundColor:"white",overflow:"hidden",borderRadius:EStyleSheet.value("15rem"),borderWidth:0,borderColor:"#e8e8e8",marginBottom:EStyleSheet.value("15rem"),width:EStyleSheet.value('162.5rem'),marginRight:EStyleSheet.value("15rem")}}>
                             <View style={{backgroundColor:"whitesmoke",height:EStyleSheet.value("140rem")}}>
                                 <Text>123</Text>
                             </View>

@@ -99,11 +99,11 @@ export default function ArtikelScreen(props){
                            props.navigation.navigate("DetailArtikel")
                        }}>
                             <View style={{borderWidth:1.5,borderColor:"#e8e8e8",flexDirection:"row",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("15rem")}}>
-                            <View style={{width:EStyleSheet.value("100rem"),overflow:"hidden",backgroundColor:"whitesmoke",height:EStyleSheet.value("100rem")}}>
+                            <View style={{width:EStyleSheet.value("100rem"),overflow:"hidden",backgroundColor:"whitesmoke",height:EStyleSheet.value("110rem")}}>
                             </View>
-                            <View style={{flex:1,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("15rem"),height:EStyleSheet.value("100rem")}}>
-                                <Text numberOfLines={2} style={{fontWeight:"bold",fontSize:EStyleSheet.value("14rem")}}>Mengapa perusahan memerlukan wkoadkasjsakfaskdbsakdbsajkdbsakjdbsakdbkajbdsakjbdakjbdkabdaksbdkjabdkasbdjabdakb sadasdhsajkdhaskjdhjasd?</Text>
-                                <Text numberOfLines={3} style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("10rem")}}>It looks like you haven’t configured a build tool yet. You can use Bitbucket Pipelines to build, test and deploy your code.
+                            <View style={{flex:1,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("15rem"),height:EStyleSheet.value("110rem")}}>
+                                <Text numberOfLines={2} style={{fontWeight:"bold",lineHeight:20,fontSize:EStyleSheet.value("14rem")}}>Mengapa perusahan memerlukan wkoadkasjsakfaskdbsakdbsajkdbsakjdbsakdbkajbdsakjbdakjbdkabdaksbdkjabdkasbdjabdakb sadasdhsajkdhaskjdhjasd?</Text>
+                                <Text numberOfLines={3} style={{marginTop:EStyleSheet.value("5rem"),lineHeight:15,color:"grey",fontSize:EStyleSheet.value("10rem")}}>It looks like you haven’t configured a build tool yet. You can use Bitbucket Pipelines to build, test and deploy your code.
 Your existing plan already includes build minutes.</Text>
                             </View>
                         </View>

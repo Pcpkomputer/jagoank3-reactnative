@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Pressable, Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import LandingScreen from './screen/LandingScreen';
@@ -15,6 +15,8 @@ import DetailArtikelScreen from './screen/DetailArtikelScreen';
 import EbookScreen from './screen/EbookScreen.js';
 import WebinarScreen from './screen/WebinarScreen';
 
+import { Feather, Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; 
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
@@ -28,6 +30,20 @@ const forFade = ({ current }) => ({
   },
 });
 
+
+let shadow = {
+  shadowColor: "#000",
+  shadowOffset: {
+      width: 0,
+      height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+
+  elevation: 5,
+}
+
+
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 
@@ -35,6 +51,9 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MyTabBar({ state, descriptors, navigation }) {
+
+  let [selectedTab, setSelectedTab] = useState("Dashboard");
+
   return (
     <View style={{ flexDirection: 'column' }}>
       <View style={{flexDirection:"row",zIndex:100}}>
@@ -84,39 +103,66 @@ function MyTabBar({ state, descriptors, navigation }) {
             //     {label}
             //   </Text>
             // </TouchableOpacity>
-            <View style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+            <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("55rem")}}>
+              <Feather name="shopping-bag" style={{marginBottom:EStyleSheet.value("3rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
               <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Shop</Text>
-            </View>
+            </Pressable>
           );
         }
         else if(route.name==="Menu2"){
             return (
-              <View style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+              <Pressable 
+              onPress={()=>{
+                setSelectedTab("Notif");
+                navigation.navigate({
+                  name:"Menu2",
+                  merge:true
+                });
+              }}
+              style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+                <Ionicons name="notifications"  style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("6rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
                  <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Notif</Text>
-              </View>
+              </Pressable>
             );
         }
         else if(route.name==="Menu3"){
           return (
             <View style={{flex:1,height:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center"}}>
-               <View style={{backgroundColor:"rgb(35, 182, 151)",justifyContent:"center",alignItems:"center",borderRadius:999,marginBottom:EStyleSheet.value("35rem"),width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem")}}>
-                 <Image style={{width:EStyleSheet.value("130rem"),height:EStyleSheet.value("130rem"),marginBottom:EStyleSheet.value("14rem"),marginRight:EStyleSheet.value("8rem")}} source={require("./assets/jagoank3.png")}/>
+               <View
+               style={{overflow:"hidden",...shadow,borderRadius:999,marginBottom:EStyleSheet.value("35rem"),width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem")}}
+                >
+                    <Pressable 
+                    android_ripple={{
+                      color:"white"
+                    }}
+                    onPress={()=>{
+                      setSelectedTab("Dashboard");
+                      navigation.navigate({
+                        name:"Menu1",
+                        merge:true
+                      });
+                    }}
+                  style={{backgroundColor:(selectedTab==="Dashboard") ? "rgb(35, 182, 151)":"whitesmoke",overflow:"hidden",...shadow,justifyContent:"center",alignItems:"center",borderRadius:999,marginBottom:EStyleSheet.value("35rem"),width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem")}}>
+                    <Image style={{width:EStyleSheet.value("130rem"),height:EStyleSheet.value("130rem"),marginBottom:EStyleSheet.value("14rem"),marginRight:EStyleSheet.value("8rem")}} source={require("./assets/jagoank3.png")}/>
+                    </Pressable>
                </View>
             </View>
           );
         }
         else if(route.name==="Menu4"){
           return (
-            <View style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+            <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+              <AntDesign name="link" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
                <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Tautan</Text>
-            </View>
+            </Pressable>
           );
       }
       else if(route.name==="Menu5"){
         return (
-          <View style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+          <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+            <FontAwesome name="user" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
             <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Profil</Text>
-          </View>
+          </Pressable>
         );
     }
      
@@ -138,8 +184,16 @@ function MyTabs() {
 
       <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
         <Tab.Screen options={{headerShown:false}} name="Menu1" component={DashboardScreen} />
-        <Tab.Screen options={{headerShown:false}} name="Menu2" component={DashboardScreen} />
-        <Tab.Screen options={{headerShown:false}} name="Menu3" component={DashboardScreen} />
+        <Tab.Screen options={{headerShown:false}} name="Menu2" component={()=>{
+          return (
+            <View><Text>tes menu2</Text></View>
+          )
+        }} />
+        <Tab.Screen options={{headerShown:false}} name="Menu3" component={()=>{
+          return (
+            <View><Text>tes menu3</Text></View>
+          )
+        }} /> 
         <Tab.Screen options={{headerShown:false}} name="Menu4" component={DashboardScreen} />
         <Tab.Screen options={{headerShown:false}} name="Menu5" component={DashboardScreen} />
       </Tab.Navigator>

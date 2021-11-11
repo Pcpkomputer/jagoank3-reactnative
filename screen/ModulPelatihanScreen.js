@@ -69,7 +69,7 @@ export default function ModulPelatihanScreen(props){
                         colors={['#24b596', '#04a280', '#04a280']}
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1, y: 1 }}
-                        style={{backgroundColor:"#24b596",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),display:"flex",flexDirection:"row"}}>
+                        style={{...shadow,backgroundColor:"#24b596",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),display:"flex",flexDirection:"row"}}>
                             <View style={{width:EStyleSheet.value("70rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("60rem")}}>
                                         <Svg
                                         xmlns="http://www.w3.org/2000/svg"
