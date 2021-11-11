@@ -144,6 +144,11 @@ export default function DashboardScreen(props){
                             <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>ARTIKEL</Text>
                         </View>
                         </Pressable>
+                        <Pressable
+                        onPress={()=>{
+                            props.navigation.navigate("Ebook");
+                        }}
+                        >
                         <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
                             <View style={{height:EStyleSheet.value("40rem"),width:EStyleSheet.value("40rem")}}>
                                 <Svg
@@ -159,6 +164,12 @@ export default function DashboardScreen(props){
                             </View>
                             <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>E-BOOK</Text>
                         </View>
+                        </Pressable>
+                        <Pressable
+                        onPress={()=>{
+                            props.navigation.navigate("Webinar");
+                        }}
+                        >
                         <View style={{...shadow,backgroundColor:"white",height:EStyleSheet.value("120rem"),borderRadius:EStyleSheet.value("5rem"),padding:EStyleSheet.value("10rem"),width:EStyleSheet.value("103.5rem"),marginRight:EStyleSheet.value("15rem")}}>
                             <View style={{height:EStyleSheet.value("40rem"),width:EStyleSheet.value("40rem")}}>
                                     <Svg
@@ -180,6 +191,7 @@ export default function DashboardScreen(props){
                             </View>
                             <Text style={{marginTop:EStyleSheet.value("10rem"),lineHeight:20,letterSpacing:EStyleSheet.value("1rem"),color:"#24b596",fontWeight:"bold",fontSize:EStyleSheet.value("12rem"),marginBottom:EStyleSheet.value("30rem")}}>WEBINAR</Text>
                         </View>
+                        </Pressable>
                     </View>
                </View>
                <View style={{marginBottom:EStyleSheet.value("25rem")}}>

@@ -95,7 +95,10 @@ export default function ArtikelScreen(props){
                         //     </LinearGradient>
                         // </LinearGradient>
                         // </Pressable>
-                        <View style={{borderWidth:1.5,borderColor:"#e8e8e8",flexDirection:"row",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("15rem")}}>
+                       <Pressable onPress={()=>{
+                           props.navigation.navigate("DetailArtikel")
+                       }}>
+                            <View style={{borderWidth:1.5,borderColor:"#e8e8e8",flexDirection:"row",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("15rem")}}>
                             <View style={{width:EStyleSheet.value("100rem"),overflow:"hidden",backgroundColor:"whitesmoke",height:EStyleSheet.value("100rem")}}>
                             </View>
                             <View style={{flex:1,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("15rem"),height:EStyleSheet.value("100rem")}}>
@@ -104,6 +107,7 @@ export default function ArtikelScreen(props){
 Your existing plan already includes build minutes.</Text>
                             </View>
                         </View>
+                       </Pressable>
                       )
                 }}
                 />

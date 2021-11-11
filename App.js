@@ -11,6 +11,9 @@ import ModulPelatihanScreen from './screen/ModulPelatihanScreen';
 import DetailModulPelatihanScreen from './screen/DetailModulPelatihanScreen';
 import ShopScreen from './screen/ShopScreen';
 import ArtikelScreen from './screen/ArtikelScreen';
+import DetailArtikelScreen from './screen/DetailArtikelScreen';
+import EbookScreen from './screen/EbookScreen.js';
+import WebinarScreen from './screen/WebinarScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -195,6 +198,27 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={ArtikelScreen} />
+          <Stack.Screen 
+      name="DetailArtikel" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailArtikelScreen} />
+            <Stack.Screen 
+      name="Ebook" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={EbookScreen} />
+             <Stack.Screen 
+      name="Webinar" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={WebinarScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   )
