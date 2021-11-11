@@ -7,6 +7,8 @@ import LandingScreen from './screen/LandingScreen';
 import LoginScreen from './screen/LoginScreen';
 import DaftarScreen from './screen/DaftarScreen';
 import DashboardScreen from './screen/DashboardScreen';
+import ModulPelatihanScreen from './screen/ModulPelatihanScreen';
+import DetailModulPelatihanScreen from './screen/DetailModulPelatihanScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -163,6 +165,20 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={DaftarScreen} />
+        <Stack.Screen 
+      name="ModulPelatihan" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={ModulPelatihanScreen} />
+        <Stack.Screen 
+      name="DetailModulPelatihan" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailModulPelatihanScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   )
