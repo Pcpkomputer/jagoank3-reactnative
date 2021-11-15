@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+
 let shadow = {
     shadowColor: "grey",
     shadowOffset: {
@@ -53,7 +54,7 @@ export default function DashboardScreen(props){
                            <View style={{flex:1}}>
                                 <Text style={{color:"white",letterSpacing:EStyleSheet.value("10rem"),fontWeight:"bold"}}>PLATINUM</Text>
                                 <View style={{flex:1,justifyContent:"center"}}>
-                                    <Text style={{color:"white",fontWeight:"bold",letterSpacing:3}}>PADANG P.Y</Text>
+                                    <Text numberOfLines={2} style={{color:"white",fontWeight:"bold",letterSpacing:3}}>PADANG P.Y</Text>
                                     <View style={{marginTop:EStyleSheet.value("10rem"),borderWidth:0.2,justifyContent:"center",alignItems:"center",borderColor:"white",padding:EStyleSheet.value("5rem")}}>
                                         <Text style={{color:"white"}}>Non Member</Text>
                                     </View>
@@ -232,7 +233,7 @@ export default function DashboardScreen(props){
                                         </View>
                                         <View style={{flex:1,justifyContent:"center"}}>
                                             <Text style={{color:"white",marginBottom:EStyleSheet.value("2rem"),fontSize:EStyleSheet.value("10rem")}}>SERTIFIKASI</Text>
-                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white"}}>Sertifikasi Kemnaker RI</Text>
+                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white",paddingRight:EStyleSheet.value("20rem")}}>Sertifikasi Kemnaker RIsdfdsfdsfdsfsdfsfsdfdsfdsf dd</Text>
                                         </View>
                                         <LinearGradient 
                                         colors={['#24b596', '#04a280', '#04a280']}

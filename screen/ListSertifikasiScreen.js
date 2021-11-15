@@ -244,7 +244,7 @@ export default function ListSertifikasiScreen(props){
                                         props.navigation.navigate("DetailSertifikasi");
                                     }}
                                     style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
-                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6</Text>
+                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigas</Text>
                                         <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
                                             <View style={{flex:1}}>
                                                 <View style={{flexDirection:"row",alignItems:"center"}}>
