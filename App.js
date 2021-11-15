@@ -14,6 +14,8 @@ import ArtikelScreen from './screen/ArtikelScreen';
 import DetailArtikelScreen from './screen/DetailArtikelScreen';
 import EbookScreen from './screen/EbookScreen.js';
 import WebinarScreen from './screen/WebinarScreen';
+import ListSertifikasiScreen from './screen/ListSertifikasiScreen';
+import DetailSertifikasiScreen from './screen/DetailSertifikasiScreen';
 
 import { Feather, Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; 
 
@@ -273,6 +275,20 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={WebinarScreen} />
+         <Stack.Screen 
+      name="ListSertifikasi" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={ListSertifikasiScreen} />
+       <Stack.Screen 
+      name="DetailSertifikasi" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailSertifikasiScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   )
