@@ -16,6 +16,12 @@ import EbookScreen from './screen/EbookScreen.js';
 import WebinarScreen from './screen/WebinarScreen';
 import ListSertifikasiScreen from './screen/ListSertifikasiScreen';
 import DetailSertifikasiScreen from './screen/DetailSertifikasiScreen';
+import DetailIdentitasCheckoutSertifikasiScreen from './screen/DetailIdentitasCheckoutSertifikasiScreen';
+import DetailItemCheckoutSertifikasiScreen from './screen/DetailItemCheckoutSertifikasiScreen';
+import InvoiceSertifikasiScreen from './screen/InvoiceSertifikasiScreen';
+import DetailIdentitasCheckoutShopScreen from './screen/DetailIdentitasCheckoutShopScreen';
+import DetailItemCheckoutShopScreen from './screen/DetailItemCheckoutShopScreen';
+import InvoiceShopScreen from './screen/InvoiceShopScreen';
 
 import { Feather, Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; 
 
@@ -105,7 +111,11 @@ function MyTabBar({ state, descriptors, navigation }) {
             //     {label}
             //   </Text>
             // </TouchableOpacity>
-            <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("55rem")}}>
+            <Pressable 
+            onPress={()=>{
+              navigation.navigate("DetailItemCheckoutShop");
+            }}
+            style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("55rem")}}>
               <Feather name="shopping-bag" style={{marginBottom:EStyleSheet.value("3rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
               <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Shop</Text>
             </Pressable>
@@ -207,12 +217,12 @@ function MyStack(){
     <NavigationContainer>
     <Stack.Navigator
     >
-      <Stack.Screen 
-       options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      name="Landing" component={MyTabs} />
+        <Stack.Screen 
+        options={{
+          headerShown:false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+        }}
+      name="Landing" component={LandingScreen} />
       <Stack.Screen 
         options={{
           headerShown:false,
@@ -226,6 +236,12 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={DaftarScreen} />
+           <Stack.Screen 
+       options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      name="Dashboard" component={MyTabs} />
         <Stack.Screen 
       name="ModulPelatihan" 
       options={{
@@ -289,6 +305,48 @@ function MyStack(){
         cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
       }}
       component={DetailSertifikasiScreen} />
+       <Stack.Screen 
+      name="DetailIdentitasCheckoutSertifikasi" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailIdentitasCheckoutSertifikasiScreen} />
+         <Stack.Screen 
+      name="DetailItemCheckoutSertifikasi" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailItemCheckoutSertifikasiScreen} />
+        <Stack.Screen 
+      name="InvoiceSertifikasi" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={InvoiceSertifikasiScreen} />
+        <Stack.Screen 
+      name="DetailItemCheckoutShop" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailItemCheckoutShopScreen} />
+         <Stack.Screen 
+      name="DetailIdentitasCheckoutShop" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={DetailIdentitasCheckoutShopScreen} />
+        <Stack.Screen 
+      name="InvoiceShop" 
+      options={{
+        headerShown:false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+      }}
+      component={InvoiceShopScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   )

@@ -185,10 +185,17 @@ export default function LoginScreen(props){
                     <View style={{marginTop:EStyleSheet.value("40rem"),justifyContent:"flex-end",alignItems:"flex-end"}}>
                         <Text style={{color:"rgb(38, 180, 149)",fontSize:EStyleSheet.value("13rem"),opacity:0.5}}>Lupa Sandi?</Text>
                     </View>
-                    <View style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
+                    <Pressable 
+                    android_ripple={{
+                        color:"white"
+                    }}
+                    onPress={()=>{
+                        props.navigation.navigate("Dashboard");
+                    }}
+                    style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
                         <Text style={{color:"white",fontWeight:"bold"}}>Masuk</Text>
                         <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
-                    </View>
+                    </Pressable>
                     <View style={{marginTop:EStyleSheet.value("20rem"),justifyContent:"center",flexDirection:"row",alignItems:"center"}}>
                         <Text style={{fontWeight:"bold"}}>Belum punya akun?</Text>
                         <TouchableOpacity

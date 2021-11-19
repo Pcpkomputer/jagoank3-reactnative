@@ -58,6 +58,19 @@ export default function DetailSertifikasiScreen(props){
             </View>
             {
                 (dataLoaded) &&
+                <Pressable 
+                onPress={()=>{
+                    props.navigation.navigate("DetailIdentitasCheckoutSertifikasi");
+                }}
+                android_ripple={{
+                    color:"#e8e8e8"
+                }}
+                style={{position:"absolute",bottom:0,zIndex:999,backgroundColor:"rgb(38, 180, 149)",justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("30rem"),width:"100%",height:EStyleSheet.value("60rem")}}>
+                    <Text style={{color:"white",fonPressableght:"bold",fontSize:EStyleSheet.value("18rem")}}>Proses Pemesanan</Text>
+                </Pressable>
+            }
+            {
+                (dataLoaded) &&
                 <ScrollView style={{backgroundColor:"whitesmoke"}}>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),zIndex:1,paddingTop:EStyleSheet.value("20rem")}}>
                         <View style={{...shadow,backgroundColor:"white",borderTopRightRadius:EStyleSheet.value("20rem"),borderTopLeftRadius:EStyleSheet.value("20rem")}}>
@@ -132,8 +145,8 @@ export default function DetailSertifikasiScreen(props){
                             </View>
                         </View>
                     </View>
-                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("20rem")}}>
-                        <View style={{...shadow,backgroundColor:"white"}}>
+                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("90rem")}}>
+                        <View style={{...shadow,borderBottomLeftRadius:EStyleSheet.value("30rem"),borderBottomRightRadius:EStyleSheet.value("30rem"),backgroundColor:"white"}}>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginVertical:EStyleSheet.value("20rem")}}>
                                 <View style={{backgroundColor:"#ededed",position:"relative",overflow:"hidden",height:EStyleSheet.value("40rem"),borderRadius:EStyleSheet.value("10rem")}}>
                                     <View style={{position:"absolute",width:"50%",backgroundColor:"rgb(38, 180, 140)",height:"100%"}}></View>
@@ -179,7 +192,7 @@ export default function DetailSertifikasiScreen(props){
                                     style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
                                         <Text>Deskripsi</Text>
                                     </Pressable>
-                                    <View style={{}}>
+                                    <View style={{marginBottom:EStyleSheet.value("50rem")}}>
                                         <Collapsible  collapsed={deskripsiHidden}>
                                             <View style={{marginVertical:EStyleSheet.value("10rem")}}>
                                                 <Text>123</Text>
