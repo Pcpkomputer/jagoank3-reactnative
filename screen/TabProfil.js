@@ -68,10 +68,48 @@ export default function TabProfil(props){
             {
                 (dataLoaded) &&
                 <ScrollView>
-                    <View style={{backgroundColor:"grey",borderBottomLeftRadius:EStyleSheet.value("10rem"),borderBottomRightRadius:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("30rem")}}>
-                        <View style={{height:EStyleSheet.value("180rem"),justifyContent:"flex-end"}}>
-                            <View style={{backgroundColor:"white",height:EStyleSheet.value("115rem"),borderRadius:EStyleSheet.value("10rem")}}>
-                                <Text>123</Text>
+                    <View 
+                    style={{backgroundColor:"rgb(38,180,149)",borderBottomLeftRadius:EStyleSheet.value("10rem"),borderBottomRightRadius:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("30rem")}}>
+                       
+                       <LinearGradient 
+                        colors={['rgb(38, 180, 149)','rgb(38, 180, 149)','white']}
+                       style={{height:EStyleSheet.value("50rem"),position:"absolute",bottom:0,width:"100%"}}>
+                        </LinearGradient>
+
+                       
+                        <View style={{height:EStyleSheet.value("220rem"),marginHorizontal:EStyleSheet.value("20rem"),justifyContent:"flex-end"}}>
+                            <View style={{backgroundColor:"white",height:EStyleSheet.value("145rem"),borderRadius:EStyleSheet.value("10rem")}}>
+                                <View style={{backgroundColor:"#ff5715",justifyContent:"center",alignItems:"center",alignSelf:"center",position:"absolute",borderRadius:EStyleSheet.value("10rem"),bottom:EStyleSheet.value("100rem"),width:EStyleSheet.value("100rem"),height:EStyleSheet.value("100rem")}}>
+                                    <Text style={{color:"white",fontSize:EStyleSheet.value("50rem"),fontWeight:"bold"}}>PP</Text>
+                                </View>
+                                <View style={{marginTop:EStyleSheet.value("125rem")/2-EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center"}}>
+                                    <Text style={{color:"grey",fontWeight:"bold"}}>PADANG PERWIRA YUDHA</Text>
+                                    <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem"),marginTop:EStyleSheet.value("3rem")}}>yudhacode</Text>
+                                </View>
+                                <View style={{flex:1,justifyContent:"flex-end"}}>
+                                    <View style={{paddingVertical:EStyleSheet.value("7rem"),flexDirection:"row",borderTopWidth:0.5,borderColor:"grey",paddingHorizontal:EStyleSheet.value("10rem")}}>
+                                        <Text style={{fontSize:EStyleSheet.value("12rem"),flex:1}}>Valid Thru:</Text>
+                                        <Text style={{Flex:1,justifyContent:"center",alignItems:"center",fontWeight:"bold"}}>0 point</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                       
+                    </View>
+
+                    <View style={{marginTop:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingBottom:EStyleSheet.value("10rem")}}>
+                        <View style={{...shadow,backgroundColor:"white",padding:EStyleSheet.value("10rem"),borderRadius:EStyleSheet.value("7rem")}}>
+                            <View style={{flexDirection:"row",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
+                                    <Text>Icon</Text>
+                                </View>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Unduh CV</Text>
+                            </View>
+                            <View style={{flexDirection:"row",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
+                                    <Text>Icon</Text>
+                                </View>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Unduh CV</Text>
                             </View>
                         </View>
                     </View>
