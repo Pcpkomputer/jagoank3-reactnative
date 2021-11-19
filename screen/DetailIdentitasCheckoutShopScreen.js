@@ -47,6 +47,8 @@ export default function DetailIdentitasCheckoutShopScreen(props){
         }, 1000);
     },[])
 
+    
+
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={{height:StatusBarHeight}}></View>

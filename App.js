@@ -23,6 +23,10 @@ import DetailIdentitasCheckoutShopScreen from './screen/DetailIdentitasCheckoutS
 import DetailItemCheckoutShopScreen from './screen/DetailItemCheckoutShopScreen';
 import InvoiceShopScreen from './screen/InvoiceShopScreen';
 
+import TabNotifikasi from './screen/TabNotifikasi';
+import TabTautan from './screen/TabTautan';
+import TabProfil from './screen/TabProfil';
+
 import { Feather, Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -63,7 +67,7 @@ function MyTabBar({ state, descriptors, navigation }) {
   let [selectedTab, setSelectedTab] = useState("Dashboard");
 
   return (
-    <View style={{ flexDirection: 'column' }}>
+    <View style={{ flexDirection: 'column',backgroundColor:"whitesmoke",...shadow }}>
       <View style={{flexDirection:"row",zIndex:100}}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -163,7 +167,15 @@ function MyTabBar({ state, descriptors, navigation }) {
         }
         else if(route.name==="Menu4"){
           return (
-            <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+            <Pressable 
+            onPress={()=>{
+              setSelectedTab("Tautan");
+              navigation.navigate({
+                name:"Menu4",
+                merge:true
+              });
+            }}
+            style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
               <AntDesign name="link" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
                <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Tautan</Text>
             </Pressable>
@@ -171,7 +183,15 @@ function MyTabBar({ state, descriptors, navigation }) {
       }
       else if(route.name==="Menu5"){
         return (
-          <Pressable style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
+          <Pressable 
+          onPress={()=>{
+            setSelectedTab("Profil");
+            navigation.navigate({
+              name:"Menu5",
+              merge:true
+            });
+          }}
+          style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
             <FontAwesome name="user" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
             <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Profil</Text>
           </Pressable>
@@ -196,18 +216,14 @@ function MyTabs() {
 
       <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
         <Tab.Screen options={{headerShown:false}} name="Menu1" component={DashboardScreen} />
-        <Tab.Screen options={{headerShown:false}} name="Menu2" component={()=>{
-          return (
-            <View><Text>tes menu2</Text></View>
-          )
-        }} />
+        <Tab.Screen options={{headerShown:false}} name="Menu2" component={TabNotifikasi} />
         <Tab.Screen options={{headerShown:false}} name="Menu3" component={()=>{
           return (
             <View><Text>tes menu3</Text></View>
           )
         }} /> 
-        <Tab.Screen options={{headerShown:false}} name="Menu4" component={DashboardScreen} />
-        <Tab.Screen options={{headerShown:false}} name="Menu5" component={DashboardScreen} />
+        <Tab.Screen options={{headerShown:false}} name="Menu4" component={TabTautan} />
+        <Tab.Screen options={{headerShown:false}} name="Menu5" component={TabProfil} />
       </Tab.Navigator>
   );
 }
