@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEfffect, useRef} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, Image, Pressable, TextInput } from 'react-native';
+import React, {useState, useEfffect, useRef, useContext} from 'react';
+import { StyleSheet, Text, View, Dimensions, ScrollView, Image, Pressable, TextInput, ActivityIndicator, AsyncStorage } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { endpoint } from '../utils/endpoint';
+import { GlobalContext } from '../App';
 
 
 export default function DaftarScreen(props){
@@ -19,6 +22,20 @@ export default function DaftarScreen(props){
     let refFormKonfirmasiKataSandi = useRef();
 
     let [selectedForm, setSelectedForm] = useState(0);
+
+    let [namaLengkap,setNamaLengkap] = useState("");
+    let [username,setUsername] = useState("");
+    let [email,setEmail] = useState("");
+    let [noTelepon, setNoTelepon] = useState("");
+    let [kataSandi, setKataSandi] = useState("");
+    let [konfirmasiKataSandi, setKonfirmasiKataSandi] = useState("");
+
+    let [kataSandiHidden, setKataSandiHidden] = useState(true);
+    let [konfirmasiKataSandiHidden, setKonfirmasiKataSandiHidden] = useState(true);
+
+    let [daftarLoading, setDaftarLoading] = useState(false);
+
+    let globalContext = useContext(GlobalContext);
 
     return (
         <ScrollView style={{flex:1,backgroundColor:"rgb(38, 180, 149)"}}>
@@ -47,7 +64,9 @@ export default function DaftarScreen(props){
                             <View style={{flex:1,paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Nama Lengkap</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
-                                    <TextInput style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
+                                    <TextInput 
+                                   
+                                    style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
                                 </View>
                             </View>
                         </View>
@@ -60,7 +79,9 @@ export default function DaftarScreen(props){
                             <View style={{flex:1,paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Username</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
-                                    <TextInput style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
+                                    <TextInput 
+                                 
+                                    style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
                                 </View>
                             </View>
                         </View>
@@ -238,6 +259,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Nama Lengkap</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
                                     <TextInput 
+                                     onChangeText={(text)=>{
+                                        setNamaLengkap(text);
+                                    }}
+                                    value={namaLengkap}
                                     ref={refFormNamaLengkap}
                                     returnKeyType="next"
                                     onFocus={()=>{
@@ -267,6 +292,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Username</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
                                     <TextInput 
+                                    onChangeText={(text)=>{
+                                        setUsername(text);
+                                    }}
+                                    value={username}
                                     ref={refFormUsername}
                                     returnKeyType="next"
                                     onFocus={()=>{
@@ -296,6 +325,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Email</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
                                     <TextInput 
+                                       onChangeText={(text)=>{
+                                           setEmail(text);
+                                       }}
+                                       value={email}
                                        ref={refFormEmail}
                                        returnKeyType="next"
                                        onFocus={()=>{
@@ -325,6 +358,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>No Telepon</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
                                     <TextInput 
+                                       onChangeText={(text)=>{
+                                           setNoTelepon(text);
+                                       }}
+                                       value={noTelepon}
                                        ref={refFormNoTelepon}
                                        returnKeyType="next"
                                        onFocus={()=>{
@@ -354,6 +391,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Kata Sandi</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),flexDirection:"row",justifyContent:"center"}}>
                                     <TextInput 
+                                      onChangeText={(text)=>{
+                                          setKataSandi(text);
+                                      }}
+                                      value={kataSandi}
                                       ref={refFormKataSandi}
                                       returnKeyType="next"
                                       onFocus={()=>{
@@ -369,10 +410,20 @@ export default function DaftarScreen(props){
                                           }, 1);
                                           refFormKonfirmasiKataSandi.current.focus();
                                       }}
-                                    secureTextEntry={true} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
-                                    <View style={{width:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center"}}>
-                                            <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />
-                                    </View>
+                                    secureTextEntry={kataSandiHidden} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
+                                    <TouchableOpacity 
+                                    activeOpacity={0.8}
+                                    onPress={()=>{
+                                        setKataSandiHidden(!kataSandiHidden);
+                                    }}
+                                    style={{width:EStyleSheet.value("40rem"),flex:1,justifyContent:"center",alignItems:"center"}}>
+                                            {
+                                                (kataSandiHidden) ?
+                                                <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />
+                                                :
+                                                <Ionicons name="eye-off" size={EStyleSheet.value("19rem")} color="black" />
+                                            }
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
@@ -386,6 +437,10 @@ export default function DaftarScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Konfirmasi Kata Sandi</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),flexDirection:"row",justifyContent:"center"}}>
                                     <TextInput 
+                                    onChangeText={(text)=>{
+                                        setKonfirmasiKataSandi(text);
+                                    }}
+                                    value={konfirmasiKataSandi}
                                      ref={refFormKonfirmasiKataSandi}
                                      returnKeyType="done"
                                      onFocus={()=>{
@@ -401,10 +456,20 @@ export default function DaftarScreen(props){
                                         //  }, 1);
                                          //refFormKonfirmasiKataSandi.current.focus();
                                      }}
-                                    secureTextEntry={true} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
-                                    <View style={{width:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center"}}>
-                                            <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />
-                                    </View>
+                                    secureTextEntry={konfirmasiKataSandiHidden} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
+                                    <TouchableOpacity 
+                                    activeOpacity={0.8}
+                                    onPress={()=>{
+                                        setKonfirmasiKataSandiHidden(!konfirmasiKataSandiHidden);
+                                    }}
+                                    style={{width:EStyleSheet.value("40rem"),flex:1,justifyContent:"center",alignItems:"center"}}>
+                                            {
+                                                (konfirmasiKataSandiHidden) ?
+                                                <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />
+                                                :
+                                                <Ionicons name="eye-off" size={EStyleSheet.value("19rem")} color="black" />
+                                            }
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
@@ -414,10 +479,104 @@ export default function DaftarScreen(props){
                         Dengan menekan tombol daftar, Anda menyetujui <Text style={{color:"rgb(38, 180, 149)",fontWeight:"bold"}}> Syarat & Ketentuan</Text> Kami.
                         </Text>
                     </View>
-                    <View style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
-                        <Text style={{color:"white",fontWeight:"bold"}}>Masuk</Text>
-                        <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
-                    </View>
+                    {
+                        (daftarLoading) ?
+                        <View
+                        style={{marginTop:EStyleSheet.value("10rem"),opacity:0.5,backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
+                            <ActivityIndicator color="white"/>
+                            <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
+                        </View>
+                        :
+                        <Pressable 
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        onPress={async ()=>{
+                            if(konfirmasiKataSandi!==kataSandi){
+                                alert("Konfirmasi kata sandi tidak sama...");
+                            }
+                            else{
+                                if(namaLengkap.length===0 || username.length===0 || email.length===0 || noTelepon.length===0 || kataSandi.length===0 || konfirmasiKataSandi.length===0){
+                                    alert("Isikan semua data...");
+                                }   
+                                else{
+
+                                    // $validated = $request->validate([
+                                    //     'nama' => 'required',
+                                    //     'username' => 'required',
+                                    //     'nickname' => 'required',
+                                    //     'email' => 'required',
+                                    //     'notelepon' => 'required',
+                                    //     'katasandi' => 'required',
+                                    // ]);
+
+                                    
+                                    let payload = {
+                                        nama:namaLengkap,
+                                        username:username,
+                                        nickname:username,
+                                        email:email,
+                                        notelepon:noTelepon,
+                                        katasandi:kataSandi
+                                    };
+
+                                    try {
+                                        setDaftarLoading(true);
+                                        let request = await fetch(`${endpoint}/register`,{
+                                            method:"POST",
+                                            headers: {
+                                                "content-type":"application/json"
+                                            },
+                                            body:JSON.stringify(payload)
+                                        });
+                                        let response = await request.json();
+
+                                         if(response.success){
+
+                                            // Object {
+                                            //     "detail": Object {
+                                            //       "email": "yudha@gmail.com",
+                                            //       "id": 7,
+                                            //       "nama": "yudha",
+                                            //       "notelepon": "1111",
+                                            //     },
+                                            //     "token": "eyJpdiI6IjM5a2hoczZ1anhXZ3U5TmdtMExORUE9PSIsInZhbHVlIjoiOERkbHZ0VWIxTm10ZG9vNkRNdnBlOUdmRTZTSHZkNmZ6MWFiNWhtVjh6SVd0Y3l3LzBHYUZTUmN2Wlg0NXdSSDlDWmtDSXc1emkzSm5Ra1YyVmQ4VktXTkJjd21NdFg2L2dxL1dIMDkwK2pYOVMxYk9aUDVzanphTHZ0SHdtVk41TTcvd1FlVm83NW8yRkxiTGxJcTlpM3BUdWx6U1FQOGxlVmdHa1VFN1hMYW1IMVppUXVWN1IycDFJdVFla29wVTZHT0RzRzlITVk5aEpiT0FRRmZNUT09IiwibWFjIjoiZTc0OTAwNzQ3ZTI3Y2FiZWJiOTA5ZDMyNWQwNzQzNGZjNWM3NWQ0YWFiMTFmMTcyZjM1Y2VkMDczMTRhNmFlNSIsInRhZyI6IiJ9",
+                                            //   }
+                                            
+                                            let {data} = response;
+                                            
+                                            let payload = {
+                                                detail : {
+                                                    email : data[0].email,
+                                                    id : data[0].user_id,
+                                                    nama:data[0].nama,
+                                                    notelepon:data[0].no_telepon
+                                                },
+                                                token:data[0].token
+                                            };
+
+                                            globalContext.setCredentials(payload);
+                                            AsyncStorage.setItem("credentials",JSON.stringify(payload));
+
+                                            setDaftarLoading(false);
+
+                                         }
+                                         else{
+                                             alert(response.msg);
+                                             setDaftarLoading(false);
+                                         }
+                                    } catch (error) {
+                                        alert(error.message);
+                                        setDaftarLoading(false);
+                                    }
+                                }
+                            }
+                        }}
+                        style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
+                            <Text style={{color:"white",fontWeight:"bold"}}>Daftar</Text>
+                            <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
+                        </Pressable>
+                    }
                 </View>
             </View>
         </ScrollView>

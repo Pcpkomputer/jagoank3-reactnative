@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useContext, createContext} from 'react';
+import React, {useState, useContext, createContext, useEffect} from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Pressable, Image, AsyncStorage } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -232,7 +232,29 @@ function MyTabs() {
 
 function MyStack(){
 
+
+  let [appLoaded, setAppLoaded] = useState(false);
   let [credentials, setCredentials] = useState(null);
+
+  let checkCredentials = async ()=>{
+    let credentials = await AsyncStorage.getItem("credentials");
+    if(credentials===null){
+      setCredentials(null);
+    }
+    else{
+      let parsed = JSON.parse(credentials);
+      setCredentials(parsed);
+    }
+    setAppLoaded(true);
+  }
+
+  useEffect(()=>{
+    checkCredentials();
+  },[])
+
+  if(!appLoaded){
+    return null;
+  }
 
   if(credentials){
     return (

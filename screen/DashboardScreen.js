@@ -1,14 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEfffect, useRef} from 'react';
+import React, {useState, useEfffect, useRef, useContext, useEffect} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import Svg, { Path, Circle, Line } from "react-native-svg"
 import { LinearGradient } from 'expo-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
 
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import {GlobalContext} from '../App';
+
+import {extractInisial} from '../utils/utils';
+
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+
+import Placeholder from '../components/Placeholder';
+import { endpoint } from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "grey",
@@ -23,6 +34,36 @@ let shadow = {
 }
 
 export default function DashboardScreen(props){
+
+    let globalContext = useContext(GlobalContext);
+    
+    let [availableTraining, setAvailableTraining] = useState([]);
+    let [availableTrainingLoaded, setAvailableTrainingLoaded] = useState(false);
+
+    let fetchAvailableTraining = async ()=>{
+        setAvailableTrainingLoaded(false);
+        let request = await fetch(`${endpoint}/availabletrainingschedule`);
+        let response = await request.json();
+        setAvailableTraining(response);
+        setAvailableTrainingLoaded(true);
+    }
+
+    let [galeri,setGaleri] = useState([]);
+    let [galeriLoaded, setGaleriLoaded] = useState(false);
+
+    let fetchGaleri = async ()=>{
+        setGaleriLoaded(false);
+        let request = await fetch(`${endpoint}/galeri`);
+        let response = await request.json();
+        setGaleri(response);
+        setGaleriLoaded(true);
+    }
+
+    useEffect(()=>{
+        fetchAvailableTraining();
+        fetchGaleri();
+    },[])
+
     return (
         <ScrollView 
         overScrollMode="auto"
@@ -54,7 +95,7 @@ export default function DashboardScreen(props){
                            <View style={{flex:1}}>
                                 <Text style={{color:"white",letterSpacing:EStyleSheet.value("10rem"),fontWeight:"bold"}}>PLATINUM</Text>
                                 <View style={{flex:1,justifyContent:"center"}}>
-                                    <Text numberOfLines={2} style={{color:"white",fontWeight:"bold",letterSpacing:3}}>PADANG P.Y</Text>
+                                    <Text numberOfLines={2} style={{color:"white",fontWeight:"bold",letterSpacing:3}}>{globalContext.credentials.detail.nama}</Text>
                                     <View style={{marginTop:EStyleSheet.value("10rem"),borderWidth:0.2,justifyContent:"center",alignItems:"center",borderColor:"white",padding:EStyleSheet.value("5rem")}}>
                                         <Text style={{color:"white"}}>Non Member</Text>
                                     </View>
@@ -65,7 +106,7 @@ export default function DashboardScreen(props){
                            </View>
                            <View style={{justifyContent:"center",alignItems:"center",paddingRight:EStyleSheet.value("20rem"),paddingLeft:EStyleSheet.value("30rem")}}>
                                <View style={{backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem"),borderRadius:999}}>
-                                   <Text style={{fontSize:EStyleSheet.value("30rem")}}>PP</Text>
+                                   <Text style={{fontSize:EStyleSheet.value("30rem")}}>{extractInisial(globalContext.credentials.detail.nama)}</Text>
                                 </View>
                            </View>
                         </LinearGradient>
@@ -211,7 +252,9 @@ export default function DashboardScreen(props){
                    </View>
                    <View style={{marginTop:EStyleSheet.value("30rem"),overflow:"hidden",paddingHorizontal:EStyleSheet.value("20rem")}}>
                       {
-                          [1,2,3,4].map(()=>{
+                          (availableTrainingLoaded) ?
+                          availableTraining.map((item)=>{
+                              console.log(item);
                               return (
                                 <Pressable
                                 onPress={()=>{
@@ -233,20 +276,42 @@ export default function DashboardScreen(props){
                                         </View>
                                         <View style={{flex:1,justifyContent:"center"}}>
                                             <Text style={{color:"white",marginBottom:EStyleSheet.value("2rem"),fontSize:EStyleSheet.value("10rem")}}>SERTIFIKASI</Text>
-                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white",paddingRight:EStyleSheet.value("20rem")}}>Sertifikasi Kemnaker RIsdfdsfdsfdsfsdfsfsdfdsfdsf dd</Text>
+                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white",paddingRight:EStyleSheet.value("20rem")}}>Sertifikasi {item.nama_kategoritraining}</Text>
                                         </View>
                                         <LinearGradient 
                                         colors={['#24b596', '#04a280', '#04a280']}
                                         start={{ x: 0, y: 1 }}
                                         end={{ x: 1, y: 1 }}
                                         style={{width:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",borderTopLeftRadius:EStyleSheet.value("10rem"),borderBottomLeftRadius:EStyleSheet.value("10rem")}}>
-                                            <Text style={{color:"white",fontSize:EStyleSheet.value("15rem")}}>24</Text>
+                                            <Text style={{color:"white",fontSize:EStyleSheet.value("15rem")}}>{item.jumlah}</Text>
                                             <Text style={{color:"white",marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("11rem")}}>JADWAL</Text>
                                         </LinearGradient>
                                     </LinearGradient>
                                 </Pressable>
                               )
                           })
+                          :
+                          [1,2,3,4,5].map(()=>{
+                            return (
+                              <View
+                              >
+                                  <Placeholder show={true}
+                                  style={{backgroundColor:"whitesmoke",overflow:"hidden",marginBottom:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),display:"flex",flexDirection:"row"}}>
+                                      <View style={{width:EStyleSheet.value("70rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("60rem")}}>
+                                      
+                                      </View>
+                                      <View style={{flex:1,justifyContent:"center"}}>
+                                    
+                                      </View>
+                                      <View
+                                    
+                                      style={{width:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",borderTopLeftRadius:EStyleSheet.value("10rem"),borderBottomLeftRadius:EStyleSheet.value("10rem")}}>
+                                      
+                                      </View>
+                                  </Placeholder>
+                              </View>
+                            )
+                        })
                       }
                    </View>
                </View>
@@ -256,26 +321,45 @@ export default function DashboardScreen(props){
                         <Text style={{fontWeight:"bold",color:"#24b596"}}>See All</Text>
                    </View>
                    <View style={{marginTop:EStyleSheet.value("25rem")}}>
-                        <FlatList
-                        overScrollMode="never"
-                        horizontal={true}
-                        data={[1,2,3,4,5]}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{paddingVertical:EStyleSheet.value("5rem")}}
-                        keyExtractor={(item,index)=>`gallery-${index}`}
-                        renderItem={({item,index})=>{
-                            return (
-                                <View style={{...shadow,overflow:"hidden",marginLeft:(index===0) ? EStyleSheet.value("20rem"):null,borderRadius:EStyleSheet.value("10rem"),height:EStyleSheet.value("150rem"),marginRight:EStyleSheet.value("20rem"),backgroundColor:"white",width:EStyleSheet.value("161rem")}}>
-                                    <View style={{backgroundColor:"whitesmoke",flex:1}}>
-                                        <Text>color</Text>
-                                    </View>
-                                    <View style={{height:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center"}}>
-                                        <Text numberOfLines={2} style={{textAlign:"center",fontSize:EStyleSheet.value("13rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>123asdsadsadasadsadsadadsadadadsadadssdasdsadasdsadadadasdadsad56</Text>
-                                    </View>
-                                </View>
-                            )
-                        }}
-                        />
+                       {
+                           galeriLoaded ?
+                           <FlatList
+                           overScrollMode="never"
+                           horizontal={true}
+                           data={galeri}
+                           showsHorizontalScrollIndicator={false}
+                           contentContainerStyle={{paddingVertical:EStyleSheet.value("5rem")}}
+                           keyExtractor={(item,index)=>`gallery-${index}`}
+                           renderItem={({item,index})=>{
+                               return (
+                                   <View style={{...shadow,overflow:"hidden",marginLeft:(index===0) ? EStyleSheet.value("20rem"):null,borderRadius:EStyleSheet.value("10rem"),height:EStyleSheet.value("150rem"),marginRight:EStyleSheet.value("20rem"),backgroundColor:"white",width:EStyleSheet.value("161rem")}}>
+                                       <Image resizeMode="stretch" source={{uri:`${endpoint.replace("/api","")}/storage/public/galeri/${item.gambar}`}} style={{backgroundColor:"whitesmoke",flex:1}}>
+                                       </Image>
+                                       <View style={{height:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center"}}>
+                                           <Text numberOfLines={2} style={{textAlign:"center",fontSize:EStyleSheet.value("13rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>{item.judul}</Text>
+                                       </View>
+                                   </View>
+                               )
+                           }}
+                           />
+                           :
+                           <FlatList
+                           overScrollMode="never"
+                           horizontal={true}
+                           data={[1,2,3,4,5]}
+                           showsHorizontalScrollIndicator={false}
+                           contentContainerStyle={{paddingVertical:EStyleSheet.value("5rem")}}
+                           keyExtractor={(item,index)=>`gallery-${index}`}
+                           renderItem={({item,index})=>{
+                               return (
+                                   <Placeholder show={true} style={{marginLeft:(index===0) ? EStyleSheet.value("20rem"):null,borderRadius:EStyleSheet.value("10rem"),height:EStyleSheet.value("150rem"),marginRight:EStyleSheet.value("20rem"),width:EStyleSheet.value("161rem")}}>
+                                       
+                                   </Placeholder>
+                               )
+                           }}
+                           />
+                       }
+                      
                     </View>
                </View>
         </ScrollView>
