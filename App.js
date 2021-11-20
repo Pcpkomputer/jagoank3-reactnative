@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Pressable, Image } from 'react-native';
+import React, {useState, useContext, createContext} from 'react';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Pressable, Image, AsyncStorage } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import LandingScreen from './screen/LandingScreen';
@@ -54,6 +54,8 @@ let shadow = {
 
   elevation: 5,
 }
+
+export let GlobalContext = createContext();
 
 
 const entireScreenWidth = Dimensions.get('window').width;
@@ -229,143 +231,273 @@ function MyTabs() {
 }
 
 function MyStack(){
-  return (
-    <NavigationContainer>
-    <Stack.Navigator
-    >
-        <Stack.Screen 
-        options={{
-          headerShown:false,
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-        }}
-      name="Landing" component={LandingScreen} />
-      <Stack.Screen 
-        options={{
-          headerShown:false,
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-        }}
-      name="Login" component={LoginScreen} />
-      <Stack.Screen 
-      name="Daftar" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DaftarScreen} />
-           <Stack.Screen 
-       options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      name="Dashboard" component={MyTabs} />
-        <Stack.Screen 
-      name="ModulPelatihan" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={ModulPelatihanScreen} />
-        <Stack.Screen 
-      name="DetailModulPelatihan" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailModulPelatihanScreen} />
-       <Stack.Screen 
-      name="Shop" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={ShopScreen} />
-        <Stack.Screen 
-      name="Artikel" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={ArtikelScreen} />
-          <Stack.Screen 
-      name="DetailArtikel" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailArtikelScreen} />
+
+  let [credentials, setCredentials] = useState(null);
+
+  if(credentials){
+    return (
+      <GlobalContext.Provider value={{credentials,setCredentials}}>
+          <NavigationContainer>
+          <Stack.Navigator
+          >
+                <Stack.Screen 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            name="Dashboard" component={MyTabs} />
+              <Stack.Screen 
+            name="ModulPelatihan" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ModulPelatihanScreen} />
+              <Stack.Screen 
+            name="DetailModulPelatihan" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailModulPelatihanScreen} />
             <Stack.Screen 
-      name="Ebook" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={EbookScreen} />
-             <Stack.Screen 
-      name="Webinar" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={WebinarScreen} />
-         <Stack.Screen 
-      name="ListSertifikasi" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={ListSertifikasiScreen} />
-       <Stack.Screen 
-      name="DetailSertifikasi" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailSertifikasiScreen} />
-       <Stack.Screen 
-      name="DetailIdentitasCheckoutSertifikasi" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailIdentitasCheckoutSertifikasiScreen} />
-         <Stack.Screen 
-      name="DetailItemCheckoutSertifikasi" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailItemCheckoutSertifikasiScreen} />
-        <Stack.Screen 
-      name="InvoiceSertifikasi" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={InvoiceSertifikasiScreen} />
-        <Stack.Screen 
-      name="DetailItemCheckoutShop" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailItemCheckoutShopScreen} />
-         <Stack.Screen 
-      name="DetailIdentitasCheckoutShop" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={DetailIdentitasCheckoutShopScreen} />
-        <Stack.Screen 
-      name="InvoiceShop" 
-      options={{
-        headerShown:false,
-        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
-      }}
-      component={InvoiceShopScreen} />
-    </Stack.Navigator>
-    </NavigationContainer>
-  )
+            name="Shop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ShopScreen} />
+              <Stack.Screen 
+            name="Artikel" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ArtikelScreen} />
+                <Stack.Screen 
+            name="DetailArtikel" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailArtikelScreen} />
+                  <Stack.Screen 
+            name="Ebook" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={EbookScreen} />
+                  <Stack.Screen 
+            name="Webinar" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={WebinarScreen} />
+              <Stack.Screen 
+            name="ListSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ListSertifikasiScreen} />
+            <Stack.Screen 
+            name="DetailSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailSertifikasiScreen} />
+            <Stack.Screen 
+            name="DetailIdentitasCheckoutSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailIdentitasCheckoutSertifikasiScreen} />
+              <Stack.Screen 
+            name="DetailItemCheckoutSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailItemCheckoutSertifikasiScreen} />
+              <Stack.Screen 
+            name="InvoiceSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={InvoiceSertifikasiScreen} />
+              <Stack.Screen 
+            name="DetailItemCheckoutShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailItemCheckoutShopScreen} />
+              <Stack.Screen 
+            name="DetailIdentitasCheckoutShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailIdentitasCheckoutShopScreen} />
+              <Stack.Screen 
+            name="InvoiceShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={InvoiceShopScreen} />
+          </Stack.Navigator>
+          </NavigationContainer>
+      </GlobalContext.Provider>
+    )
+  }
+  else{
+    return (
+      <GlobalContext.Provider value={{credentials,setCredentials}}>
+          <NavigationContainer>
+          <Stack.Navigator
+          >
+              <Stack.Screen 
+              options={{
+                headerShown:false,
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+              }}
+            name="Landing" component={LandingScreen} />
+            <Stack.Screen 
+              options={{
+                headerShown:false,
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+              }}
+            name="Login" component={LoginScreen} />
+            <Stack.Screen 
+            name="Daftar" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DaftarScreen} />
+                <Stack.Screen 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            name="Dashboard" component={MyTabs} />
+              <Stack.Screen 
+            name="ModulPelatihan" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ModulPelatihanScreen} />
+              <Stack.Screen 
+            name="DetailModulPelatihan" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailModulPelatihanScreen} />
+            <Stack.Screen 
+            name="Shop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ShopScreen} />
+              <Stack.Screen 
+            name="Artikel" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ArtikelScreen} />
+                <Stack.Screen 
+            name="DetailArtikel" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailArtikelScreen} />
+                  <Stack.Screen 
+            name="Ebook" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={EbookScreen} />
+                  <Stack.Screen 
+            name="Webinar" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={WebinarScreen} />
+              <Stack.Screen 
+            name="ListSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={ListSertifikasiScreen} />
+            <Stack.Screen 
+            name="DetailSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailSertifikasiScreen} />
+            <Stack.Screen 
+            name="DetailIdentitasCheckoutSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailIdentitasCheckoutSertifikasiScreen} />
+              <Stack.Screen 
+            name="DetailItemCheckoutSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailItemCheckoutSertifikasiScreen} />
+              <Stack.Screen 
+            name="InvoiceSertifikasi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={InvoiceSertifikasiScreen} />
+              <Stack.Screen 
+            name="DetailItemCheckoutShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailItemCheckoutShopScreen} />
+              <Stack.Screen 
+            name="DetailIdentitasCheckoutShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailIdentitasCheckoutShopScreen} />
+              <Stack.Screen 
+            name="InvoiceShop" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={InvoiceShopScreen} />
+          </Stack.Navigator>
+          </NavigationContainer>
+      </GlobalContext.Provider>
+    )
+  }
+  
 }
 
 export default function App() {

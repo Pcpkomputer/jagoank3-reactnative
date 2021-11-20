@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect, useRef} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons,MaterialIcons, AntDesign } from '@expo/vector-icons'; 
 import Svg, { Path, Circle } from "react-native-svg"
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -99,17 +99,17 @@ export default function TabProfil(props){
 
                     <View style={{marginTop:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingBottom:EStyleSheet.value("10rem")}}>
                         <View style={{...shadow,backgroundColor:"white",padding:EStyleSheet.value("10rem"),borderRadius:EStyleSheet.value("7rem")}}>
-                            <View style={{flexDirection:"row",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <Text>Icon</Text>
+                                    <Feather name="user" size={EStyleSheet.value("20rem")} color="black" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Unduh CV</Text>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Profil</Text>
                             </View>
-                            <View style={{flexDirection:"row",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <Text>Icon</Text>
+                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Unduh CV</Text>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Riwayat Transaksi</Text>
                             </View>
                         </View>
                     </View>

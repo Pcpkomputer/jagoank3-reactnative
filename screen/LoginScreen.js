@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState,useRef, useEffect} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, Image, Pressable, TextInput } from 'react-native';
+import React, {useState,useRef, useEffect, useContext} from 'react';
+import { StyleSheet, Text, View, Dimensions, ScrollView, Image, Pressable, TextInput, AsyncStorage, ActivityIndicator } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons'; 
 
@@ -8,13 +8,26 @@ import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import {endpoint} from '../utils/endpoint';
+
+import { GlobalContext } from '../App';
+
 
 export default function LoginScreen(props){
 
     let [selectedForm,setSelectedForm] = useState(0);
 
+    let globalContext = useContext(GlobalContext);
+
     let refFormEmail = useRef();
     let refFormKataSandi = useRef();
+
+    let [email,setEmail] = useState("");
+    let [katasandi, setKataSandi] = useState("");
+
+    let [securePassword, setSecurePassword] = useState(true);
+
+    let [loginLoading, setLoginLoading] = useState(false);
 
     return (
         <ScrollView style={{flex:1,backgroundColor:"rgb(38, 180, 149)"}}>
@@ -43,7 +56,13 @@ export default function LoginScreen(props){
                             <View style={{flex:1,paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Email / Username</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
-                                    <TextInput style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
+                                    <TextInput
+                                    keyboardType="email-address"
+                                    onChangeText={(value)=>{
+                                        setEmail(value);
+                                    }}
+                                    value={email}
+                                    style={{width:"100%",pƒadding:0,height:"100%",color:"grey"}}/>
                                 </View>
                             </View>
                         </View>
@@ -56,13 +75,18 @@ export default function LoginScreen(props){
                             <View style={{flex:1,paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Kata Sandi</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
-                                    <TextInput secureTextEntry={true} style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
+                                    <TextInput 
+                                    onChangeText={(value)=>{
+                                        setKataSandi(value);
+                                    }}
+                                    value={katasandi}
+                                    secureTextEntry={securePassword} style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
                                 </View>
                             </View>
                         </View>
                     </View>
                     <View style={{marginTop:EStyleSheet.value("40rem"),justifyContent:"flex-end",alignItems:"flex-end"}}>
-                        <Text style={{color:"rgb(38, 180, 149)",fontSize:EStyleSheet.value("13rem"),opacity:0.5}}>Lupa Sandi?</Text>
+                        <Text style={{color:"rgb(38, 180, 149)",fontSize:EStyleSheet.value("13rem"),opacity:0.2}}>Lupa Sandi?</Text>
                     </View>
                     <View style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
                         <Text style={{color:"white",fontWeight:"bold"}}>Masuk</Text>
@@ -128,6 +152,10 @@ export default function LoginScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Email / Username</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),justifyContent:"center"}}>
                                     <TextInput 
+                                      onChangeText={(text)=>{
+                                          setEmail(text);
+                                      }}
+                                      value={email}
                                       ref={refFormEmail}
                                       returnKeyType="next"
                                       onFocus={()=>{
@@ -157,7 +185,10 @@ export default function LoginScreen(props){
                                 <Text style={{fontWeight:"bold",color:"#535353"}}>Kata Sandi</Text>
                                 <View style={{height:EStyleSheet.value("35rem"),flexDirection:"row",justifyContent:"center"}}>
                                     <TextInput 
-                                    
+                                    onChangeText={(text)=>{
+                                        setKataSandi(text);
+                                    }}
+                                    value={katasandi}
                                     ref={refFormKataSandi}
                                     returnKeyType="done"
                                     onFocus={()=>{
@@ -174,10 +205,20 @@ export default function LoginScreen(props){
                                         // refFormKataSandi.current.focus();
                                         //props.navigation.navigate("");
                                     }}
-                                    secureTextEntry={true} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
-                                    <View style={{width:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center"}}>
-                                            <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />
-                                    </View>
+                                    secureTextEntry={securePassword} style={{flex:1,padding:0,height:"100%",color:"grey"}}/>
+                                    <TouchableOpacity 
+                                    onPress={()=>{
+                                        setSecurePassword(!securePassword);
+                                    }}
+                                    activeOpacity={0.8}
+                                    
+                                    style={{width:EStyleSheet.value("40rem"),flex:1,justifyContent:"center",alignItems:"center"}}>
+                                            {
+                                                securePassword ? 
+                                                <Ionicons name="eye" size={EStyleSheet.value("19rem")} color="black" />:
+                                                <Ionicons name="eye-off" size={EStyleSheet.value("19rem")} color="black" />
+                                            }
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
@@ -185,17 +226,62 @@ export default function LoginScreen(props){
                     <View style={{marginTop:EStyleSheet.value("40rem"),justifyContent:"flex-end",alignItems:"flex-end"}}>
                         <Text style={{color:"rgb(38, 180, 149)",fontSize:EStyleSheet.value("13rem"),opacity:0.5}}>Lupa Sandi?</Text>
                     </View>
-                    <Pressable 
-                    android_ripple={{
-                        color:"white"
-                    }}
-                    onPress={()=>{
-                        props.navigation.navigate("Dashboard");
-                    }}
-                    style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
-                        <Text style={{color:"white",fontWeight:"bold"}}>Masuk</Text>
-                        <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
-                    </Pressable>
+                    {
+                        (loginLoading) ?
+                        <View
+                        style={{marginTop:EStyleSheet.value("10rem"),opacity:0.5,backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
+                            <ActivityIndicator color="white"/>
+                            <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
+                        </View>
+                        :
+                        <Pressable 
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        onPress={async ()=>{
+                            if(email.length===0 || katasandi.length===0){
+                                alert("Masukkan semua data...");
+                            }
+                            else{
+                              try {
+                                setLoginLoading(true);
+                                let request = await fetch(`${endpoint}/login`,{
+                                    method:"POST",
+                                    headers:{
+                                        "content-type":"application/json"
+                                    },
+                                    body:JSON.stringify({
+                                        email:email,
+                                        katasandi:katasandi
+                                    })
+                                });
+                                let response = await request.json();
+                                if(response.success){
+                                    //console.log(response.credentials);
+                                    globalContext.setCredentials(response.credentials);
+                                    AsyncStorage.setItem("credentials",JSON.stringify(response.credentials));
+                                    setLoginLoading(false);
+                                }
+                                else{
+                                    setLoginLoading(false);
+                                    alert(response.msg);
+                                }
+                              } catch (error) {
+                                setLoginLoading(false);
+                                alert(error.message);
+                              }
+                                
+                            }
+                            
+                            //alert(endpoint);
+                            
+                            //props.navigation.navigate("Dashboard");
+                        }}
+                        style={{marginTop:EStyleSheet.value("10rem"),backgroundColor:"rgb(38, 180, 149)",borderRadius:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("15rem")}}>
+                            <Text style={{color:"white",fontWeight:"bold"}}>Masuk</Text>
+                            <Entypo style={{paddingLeft:EStyleSheet.value("5rem"),position:"absolute",right:EStyleSheet.value("15rem"),top:EStyleSheet.value("25rem")/2}} name="arrow-long-right" size={EStyleSheet.value("20rem")} color="white" />
+                        </Pressable>
+                    }
                     <View style={{marginTop:EStyleSheet.value("20rem"),justifyContent:"center",flexDirection:"row",alignItems:"center"}}>
                         <Text style={{fontWeight:"bold"}}>Belum punya akun?</Text>
                         <TouchableOpacity
