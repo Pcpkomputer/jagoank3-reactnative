@@ -12,6 +12,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 
+import {endpoint} from '../utils/endpoint';
+
 
 let shadow = {
     shadowColor: "#000",
@@ -32,25 +34,12 @@ export default function DetailArtikelScreen(props){
     const { width } = useWindowDimensions();
 
     const source = {
-        html: `
-        <h3>sadsadasdkasdjasdjasdjasd9</h3>
-        <p>
-        abcde
-        sadasdjsaldjalkdjklajdklasdj
-        saldkjlksajdlsadjlsajdlakdjaljlkjd
-        asdasdsajdlkasjdlksajdlkasjldasjkasdasd
-        asdsadsadsa
-        dasdasdasdsadas
-        </p>
-        <img
-  width="1200" height="800"
-  style="width: 50%; height: 100px; align-self: center;"
-  src="http://placeimg.com/1200/800/animals"
-/>
-        `
+        html: props.route.params.item.konten
       };
 
     let [dataLoaded, setDataLoaded] = useState(false);
+
+    let [imageLoaded, setImageLoaded] = useState(false);
 
     useEffect(()=>{    
         setTimeout(() => {
@@ -70,7 +59,16 @@ export default function DetailArtikelScreen(props){
             {
                 (dataLoaded) &&
                 <ScrollView>
-                    <View style={{backgroundColor:"whitesmoke",height:EStyleSheet.value("250rem")}}>
+                    <View style={{backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",height:EStyleSheet.value("250rem")}}>
+                           {
+                               !imageLoaded &&
+                               <ActivityIndicator style={{position:"absolute",zIndex:100}} color="rgb(38, 180, 149)"/>
+                           }
+                           <Image 
+                            onLoad={()=>{
+                                setImageLoaded(true);
+                            }}
+                            source={{uri:`${endpoint.replace("/api","")}/storage/public/shop/${props.route.params.item.gambar_artikel}`}} style={{width:"100%",height:"100%"}}></Image>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("20rem")}}>
                            <RenderHtml

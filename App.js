@@ -232,6 +232,8 @@ function MyTabs() {
 
 function MyStack(){
 
+  let [keranjangShop, setKeranjangShop] = useState([]);
+
 
   let [appLoaded, setAppLoaded] = useState(false);
   let [credentials, setCredentials] = useState(null);
@@ -259,7 +261,7 @@ function MyStack(){
 
   if(credentials){
     return (
-      <GlobalContext.Provider value={{credentials,setCredentials}}>
+      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop}}>
           <NavigationContainer>
           <Stack.Navigator
           >
@@ -381,7 +383,7 @@ function MyStack(){
   }
   else{
     return (
-      <GlobalContext.Provider value={{credentials,setCredentials}}>
+      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop}}>
           <NavigationContainer>
           <Stack.Navigator
           >

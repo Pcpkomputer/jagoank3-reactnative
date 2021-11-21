@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
@@ -9,6 +9,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { endpoint } from '../utils/endpoint';
+
+import {GlobalContext} from '../App';
 
 let shadow = {
     shadowColor: "#000",
@@ -23,6 +25,8 @@ let shadow = {
 }
 
 export default function ShopScreen(props){
+
+    let globalContext = useContext(GlobalContext);
 
     let timer = useRef();
 
@@ -139,9 +143,36 @@ export default function ShopScreen(props){
                             <View style={{marginTop:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <Text style={{fontWeight:"bold"}}>Rp. {item.harga}</Text>
                             </View>
-                            <View style={{backgroundColor:"rgb(38, 180, 149)",flex:1,overflow:"hidden",marginTop:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center",padding:EStyleSheet.value("15rem")}}>
+                            <Pressable 
+                            onPress={()=>{
+                                let id = item.id_item;
+
+                                globalContext.setKeranjangShop((prev)=>{
+                                    let exist = false;
+                                    prev.forEach((el,index)=>{
+                                        if(el.id_item===id){
+                                            exist=true;
+                                        }
+                                    })
+
+                                    if(exist){
+                                        alert("Item telah ditambahkan...");
+                                        return [
+                                            ...prev
+                                        ]
+                                    }
+                                    else{
+                                        alert("Item berhasil ditambahkan...");
+                                        return [
+                                            ...prev,
+                                            item
+                                        ]
+                                    }
+                                })
+                            }}
+                            style={{backgroundColor:"rgb(38, 180, 149)",flex:1,overflow:"hidden",marginTop:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center",padding:EStyleSheet.value("15rem")}}>
                                 <Text numberOfLines={1} style={{fontSize:EStyleSheet.value("13rem"),color:"white"}}>Tambah Ke Keranjang</Text>
-                            </View>
+                            </Pressable>
                         </View>
                       )
                    }
