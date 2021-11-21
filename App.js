@@ -237,6 +237,7 @@ function MyStack(){
   let [credentials, setCredentials] = useState(null);
 
   let checkCredentials = async ()=>{
+    //await AsyncStorage.removeItem("credentials");
     let credentials = await AsyncStorage.getItem("credentials");
     if(credentials===null){
       setCredentials(null);
