@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
@@ -9,7 +9,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { CommonActions } from '@react-navigation/native';
 import Collapsible from 'react-native-collapsible';
+
+import {GlobalContext} from '../App';
+import {endpoint} from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "#000",
@@ -37,11 +41,18 @@ let shadow2 = {
 
 export default function DetailIdentitasCheckoutShopScreen(props){
 
+    let globalContext = useContext(GlobalContext);
+
+    let [pembayaranLoading, setPembayaranLoading] = useState(false);
+
+    let [invoice, setInvoice] = useState(null);
+
     let [dataLoaded, setDataLoaded] = useState(false);
 
     let [deskripsiHidden, setDeskripsHidden] = useState(false);
 
     useEffect(()=>{    
+        //console.log(globalContext.credentials);
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
@@ -53,16 +64,78 @@ export default function DetailIdentitasCheckoutShopScreen(props){
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={{height:StatusBarHeight}}></View>
             <View style={{...shadow,backgroundColor:"white",flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem"),alignItems:"center",height:EStyleSheet.value("55rem")}}>
-                <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
+                 <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={()=>{
+                    props.navigation.goBack();
+                }}
+                >
+                    <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
+                </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
                     <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Detail Kontak</Text>
                 </View>
             </View>
             {
                 (dataLoaded) &&
+                (pembayaranLoading) ?
+                <View
+                style={{position:"absolute",bottom:0,opacity:0.5,zIndex:999,backgroundColor:"rgb(38, 180, 149)",justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("30rem"),width:"100%",height:EStyleSheet.value("60rem")}}>
+                    <ActivityIndicator color="white"/>
+                </View>
+                :
                 <Pressable 
-                onPress={()=>{
-                    props.navigation.navigate("InvoiceShop");
+                onPress={async ()=>{
+                    if(globalContext.keranjangShop.length>0){
+                        setPembayaranLoading(true);
+                    let payload = {
+                        credentials:globalContext.credentials,
+                        pemesanan:globalContext.keranjangShop,
+                        totaldibayarfrontend:props.route.params.totalDibayar
+                    };
+                    let request = await fetch(`${endpoint}/createinvoiceshop`,{
+                        method:"POST",
+                        headers:{
+                            "content-type":"application/json",
+                            "authorization":`Bearer ${globalContext.credentials.token}`
+                        },
+                        body:JSON.stringify(payload)
+                    });
+                    let response = await request.json();
+                    
+                    setPembayaranLoading(false);
+
+                    if(response.success){
+                        globalContext.setKeranjangShop([]);
+                        setInvoice(response);
+                        props.navigation.dispatch(state => {
+                            // Remove the home route from the stack
+                            let routes = state.routes.filter(r => !r.name.match(/(DetailItemCheckoutShop|DetailIdentitasCheckoutShop)/));
+
+                            routes = [
+                                ...routes,
+                                {
+                                    name:"InvoiceShop",
+                                    params:{
+                                        item:response
+                                    }
+                                }
+                            ];
+                          
+                            return CommonActions.reset({
+                              ...state,
+                              routes,
+                              index: routes.length - 1,
+                            });
+                          });
+                    }
+                    else{
+                        alert(response.msg);
+                    }
+                    
+
+                    }
+
                 }}
                 android_ripple={{
                     color:"#e8e8e8"
@@ -80,27 +153,27 @@ export default function DetailIdentitasCheckoutShopScreen(props){
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <Text style={{color:"grey"}}>Nama Lengkap</Text>
                                 <View style={{backgroundColor:"whitesmoke",marginTop:EStyleSheet.value("10rem"),borderBottomWidth:0.7,borderColor:"grey"}}>
-                                        <TextInput style={{paddingHorizontal:EStyleSheet.value("10rem")}} />
+                                        <TextInput disabled={true} value={globalContext.credentials.detail.nama} style={{paddingHorizontal:EStyleSheet.value("10rem")}} />
                                 </View>
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <Text style={{color:"grey"}}>No. Hp</Text>
                                 <View style={{backgroundColor:"whitesmoke",marginTop:EStyleSheet.value("10rem"),borderBottomWidth:0.7,borderColor:"grey"}}>
-                                        <TextInput style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
+                                        <TextInput disabled={true} value={globalContext.credentials.detail.notelepon} style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
                                 </View>
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <Text style={{color:"grey"}}>Email</Text>
                                 <View style={{backgroundColor:"whitesmoke",marginTop:EStyleSheet.value("10rem"),borderBottomWidth:0.7,borderColor:"grey"}}>
-                                        <TextInput style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
+                                        <TextInput disabled={true} value={globalContext.credentials.detail.email} style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
                                 </View>
                             </View>
-                            <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
+                            {/* <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <Text style={{color:"grey"}}>Kode Referral</Text>
                                 <View style={{backgroundColor:"white",marginTop:EStyleSheet.value("10rem"),borderBottomWidth:0.7,borderColor:"grey"}}>
-                                        <TextInput style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
+                                        <TextInput disabled={true} style={{paddingHorizontal:EStyleSheet.value("10rem")}}/>
                                 </View>
-                            </View>
+                            </View> */}
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("10rem")}}>
                                 <Text style={{lineHeight:25,color:"grey"}}>Masukkan kode referral dapatkan potongan hingga 100ribu.</Text>
                             </View>

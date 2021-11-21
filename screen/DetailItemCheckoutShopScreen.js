@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
@@ -9,7 +9,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { GlobalContext } from '../App';
+
+import { formatRupiah } from '../utils/utils';
+
 import Collapsible from 'react-native-collapsible';
+
+import {endpoint} from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "#000",
@@ -37,15 +43,33 @@ let shadow2 = {
 
 export default function DetailItemCheckoutShopScreen(props){
 
+    let globalContext = useContext(GlobalContext);
+
     let [dataLoaded, setDataLoaded] = useState(false);
 
     let [deskripsiHidden, setDeskripsHidden] = useState(false);
+
+    let [totalDibayar, setTotalDibayar] = useState(0);
+
+    let hitungTotalBayar = ()=>{
+        let total = 0;
+        let list = globalContext.keranjangShop;
+        list.forEach((item)=>{
+            total=total+item.harga;
+        })
+        return total;
+    }
 
     useEffect(()=>{    
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
-    },[])
+    },[]);
+
+    useEffect(()=>{
+        let total = hitungTotalBayar();
+        setTotalDibayar(total);
+    },[globalContext.keranjangShop])
 
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
@@ -60,7 +84,9 @@ export default function DetailItemCheckoutShopScreen(props){
                 (dataLoaded) &&
                 <Pressable 
                 onPress={()=>{
-                    props.navigation.navigate("DetailIdentitasCheckoutShop");
+                    if(globalContext.keranjangShop.length>0){
+                        props.navigation.navigate("DetailIdentitasCheckoutShop", {totalDibayar});
+                    }
                 }}
                 android_ripple={{
                     color:"#e8e8e8"
@@ -75,7 +101,36 @@ export default function DetailItemCheckoutShopScreen(props){
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("70rem"),paddingBottom:EStyleSheet.value("20rem"),zIndex:1,paddingTop:EStyleSheet.value("20rem")}}>
                         <View style={{...shadow,backgroundColor:"white",paddingBottom:EStyleSheet.value("30rem"),borderBottomRightRadius:EStyleSheet.value("20rem"),borderBottomLeftRadius:EStyleSheet.value("20rem"),borderTopRightRadius:EStyleSheet.value("20rem"),borderTopLeftRadius:EStyleSheet.value("20rem")}}>
                             <Text style={{color:"rgb(38, 180, 149)",padding:EStyleSheet.value("20rem"),fontWeight:"bold",fontSize:EStyleSheet.value("18rem")}}>Pemesanan Anda</Text>
-                            <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
+                            
+                            {
+                                globalContext.keranjangShop.length > 0 ?
+                                globalContext.keranjangShop.map((item,index)=>{
+                                    return (
+                                        <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
+                                            <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
+                                                <View style={{flex:1}}>
+                                                    <Text style={{fontWeight:"bold"}}>{item.nama_barang}</Text>
+                                                    <View style={{marginTop:EStyleSheet.value("5rem")}}>
+                                                        <Text>Rp. {formatRupiah(item.harga)}</Text>
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <View style={{width:EStyleSheet.value("80rem"),height:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke"}}>
+                                                        <Image style={{height:"100%",width:"100%"}} source={{uri:`${endpoint}/storage/public/shop/${item.gambar_barang}`}}></Image>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            
+                                        </View>
+                                    )
+                                })
+                                :
+                                <View style={{paddingHorizontal:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("200rem")}}>
+                                    <Text style={{color:"grey",paddingHorizontal:EStyleSheet.value("20rem"),textAlign:"center"}}>Belum ada barang yang dipesan...</Text>
+                                </View>
+                            }
+
+                            {/* <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
                                     <View style={{flex:1}}>
                                         <Text style={{fontWeight:"bold"}}>Barang ABCDEFG</Text>
@@ -90,23 +145,7 @@ export default function DetailItemCheckoutShopScreen(props){
                                     </View>
                                 </View>
                                 
-                            </View>
-                            <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
-                                <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
-                                    <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>Barang ABCDEFG</Text>
-                                        <View style={{marginTop:EStyleSheet.value("5rem")}}>
-                                            <Text>Rp. 5.000.000</Text>
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <View style={{width:EStyleSheet.value("80rem"),height:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke"}}>
-                                            <Text>1</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                
-                            </View>
+                            </View> */}
 
 
 
@@ -119,7 +158,7 @@ export default function DetailItemCheckoutShopScreen(props){
                                         <Text style={{fontWeight:"bold"}}>Jumlah Bayar</Text>
                                     </View>
                                     <View>
-                                        <Text style={{fontWeight:"bold"}}>Rp. 8.000.000</Text>
+                                        <Text style={{fontWeight:"bold"}}>Rp. {formatRupiah(totalDibayar)}</Text>
                                     </View>
                                 </View>
                             </View>

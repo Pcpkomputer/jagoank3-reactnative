@@ -58,7 +58,14 @@ export default function WebinarScreen(props){
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={{height:StatusBarHeight}}></View>
             <View style={{...shadow,backgroundColor:"white",flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem"),alignItems:"center",height:EStyleSheet.value("55rem")}}>
-                <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
+                 <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={()=>{
+                    props.navigation.goBack();
+                }}
+                >
+                    <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
+                </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
                     <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Webinar</Text>
                 </View>
