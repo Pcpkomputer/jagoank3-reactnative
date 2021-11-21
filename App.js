@@ -22,6 +22,7 @@ import InvoiceSertifikasiScreen from './screen/InvoiceSertifikasiScreen';
 import DetailIdentitasCheckoutShopScreen from './screen/DetailIdentitasCheckoutShopScreen';
 import DetailItemCheckoutShopScreen from './screen/DetailItemCheckoutShopScreen';
 import InvoiceShopScreen from './screen/InvoiceShopScreen';
+import DetailWebinarScreen from './screen/DetailWebinarScreen';
 
 import TabNotifikasi from './screen/TabNotifikasi';
 import TabTautan from './screen/TabTautan';
@@ -376,6 +377,13 @@ function MyStack(){
               cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
             }}
             component={InvoiceShopScreen} />
+            <Stack.Screen 
+            name="DetailWebinar" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailWebinarScreen} />
           </Stack.Navigator>
           </NavigationContainer>
       </GlobalContext.Provider>
