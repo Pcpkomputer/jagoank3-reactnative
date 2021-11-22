@@ -258,7 +258,7 @@ export default function DashboardScreen(props){
                                 <Pressable
                                 onPress={()=>{
                                     console.log(item);
-                                    props.navigation.navigate("ListSertifikasi");
+                                    props.navigation.navigate("ListSertifikasi", {item});
                                 }}
                                 >
                                     <LinearGradient 

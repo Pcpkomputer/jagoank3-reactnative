@@ -9,6 +9,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { endpoint } from '../utils/endpoint';
+import {toLocaleTimestamp, formatRupiah} from '../utils/utils';
+
 import Swiper from 'react-native-swiper'
 
 const styles = StyleSheet.create({
@@ -66,6 +69,36 @@ let shadow2 = {
 
 export default function ListSertifikasiScreen(props){
 
+    let findPromoArray = (array)=>{
+        let filter = array.filter((el)=>{
+            return el.sedangpromo;
+        });
+ 
+        if(filter.length>0){
+            let index = null;
+            array.forEach((arr,i)=>{
+                if(arr.sedangpromo){
+                    index=i;
+                }
+            });
+            return {
+                promo: true,
+                index: index
+            }
+        }
+        else{
+            return {
+                promo:false,
+                index: 0
+            }
+        }
+
+    }
+
+    let [listsatu, setListSatu] = useState([]);
+    let [listdua, setListDua] = useState([]);
+    let [listtiga, setListTiga] = useState([]);
+
     let refSwiper = useRef();
 
     let getMonth = (month) =>{
@@ -118,7 +151,52 @@ export default function ListSertifikasiScreen(props){
 
     let [selectedSwipeIndex, setSelectedSwipeIndex] = useState(0);
 
+    let fetchSertifikasi = async ()=>{
+
+        let bulanpertama = new Date()
+        let bulankedua = new Date(new Date().setMonth(new Date().getMonth()+1));
+        let bulanketiga = new Date(new Date().setMonth(new Date().getMonth()+2));
+
+        let box1 = [`${bulanpertama.getFullYear()}-${bulanpertama.getMonth()+1}-1`,`${bulanpertama.getFullYear()}-${bulanpertama.getMonth()+1}-31`];
+        let box2 = [`${bulankedua.getFullYear()}-${bulankedua.getMonth()+1}-1`,`${bulankedua.getFullYear()}-${bulankedua.getMonth()+1}-31`];
+        let box3 = [`${bulanketiga.getFullYear()}-${bulanketiga.getMonth()+1}-1`,`${bulanketiga.getFullYear()}-${bulanketiga.getMonth()+1}-31`];
+
+
+        let request = await fetch(`${endpoint}/availabletrainingschedule`,{
+            method:"POST",
+            headers:{
+                "content-type":"application/json"
+            },
+            body:JSON.stringify({
+               box1,
+               box2,
+               box3
+            })
+        });
+        let response = await request.json();
+       
+        setListSatu(response.box1.map((el)=>{
+            return {
+                ...el,
+                visible:true
+            }
+        }));
+        setListDua(response.box2.map((el)=>{
+            return {
+                ...el,
+                visible:true
+            }
+        }));
+        setListTiga(response.box3.map((el)=>{
+            return {
+                ...el,
+                visible:true
+            }
+        }));
+    }
+
     useEffect(()=>{    
+        fetchSertifikasi();
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
@@ -141,7 +219,7 @@ export default function ListSertifikasiScreen(props){
                     <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Sertifikasi ...</Text>
+                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Sertifikasi {props.route.params.item.nama_kategoritraining}</Text>
                 </View>
             </View>
             {
@@ -243,20 +321,24 @@ export default function ListSertifikasiScreen(props){
                         <View style={{}}>
                             <FlatList
                             contentContainerStyle={{padding:EStyleSheet.value("20rem"),paddingVertical:0}}
-                            data={[1,2,3,4,5]}
+                            data={listsatu}
                             renderItem={({item,index})=>{
+
+                                let {promo,index:indexpromo} = findPromoArray(item.item);
+
                                 return (
                                     <Pressable 
                                     onPress={()=>{
-                                        props.navigation.navigate("DetailSertifikasi");
+                                
+                                        props.navigation.navigate("DetailSertifikasi", {item:item});
                                     }}
                                     style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
-                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigasi Batch 6Insiden Investigas</Text>
+                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
                                         <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
                                             <View style={{flex:1}}>
                                                 <View style={{flexDirection:"row",alignItems:"center"}}>
                                                     <MaterialIcons name="date-range" size={EStyleSheet.value("16rem")} style={{marginRight:EStyleSheet.value("3rem")}} color="black" />
-                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>20 November 2021</Text>
+                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>{toLocaleTimestamp(item.jadwaltraining)}</Text>
                                                 </View>
                                                 <View style={{flexDirection:"row",alignItems:"center",marginTop:EStyleSheet.value("5rem")}}>
                                                     <MaterialIcons name="place" size={EStyleSheet.value("15rem")} color="black" />
@@ -264,10 +346,18 @@ export default function ListSertifikasiScreen(props){
                                                 </View>
                                                
                                             </View>
-                                            <View style={{flex:1,alignItems:"flex-end"}}>
-                                                <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. 7.000.000</Text>
-                                                <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. 4.500.000</Text>
-                                            </View>
+                                            {
+                                                (promo) ?
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapromopaketpelatihan)}</Text>
+                                                </View>
+                                                :
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through",opacity:0}}>0</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                </View>
+                                            }
                                         </View>
                                     </Pressable>
                                 )
@@ -277,16 +367,23 @@ export default function ListSertifikasiScreen(props){
                         <View>
                         <FlatList
                             contentContainerStyle={{padding:EStyleSheet.value("20rem"),paddingVertical:0}}
-                            data={[1,2,3,4,5]}
+                            data={listdua}
                             renderItem={({item,index})=>{
+                                  let {promo,index:indexpromo} = findPromoArray(item.item);
+
                                 return (
-                                    <View style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
-                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6</Text>
+                                    <Pressable 
+                                    onPress={()=>{
+                                
+                                        props.navigation.navigate("DetailSertifikasi");
+                                    }}
+                                    style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
+                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
                                         <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
                                             <View style={{flex:1}}>
                                                 <View style={{flexDirection:"row",alignItems:"center"}}>
                                                     <MaterialIcons name="date-range" size={EStyleSheet.value("16rem")} style={{marginRight:EStyleSheet.value("3rem")}} color="black" />
-                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>20 November 2021</Text>
+                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>{toLocaleTimestamp(item.jadwaltraining)}</Text>
                                                 </View>
                                                 <View style={{flexDirection:"row",alignItems:"center",marginTop:EStyleSheet.value("5rem")}}>
                                                     <MaterialIcons name="place" size={EStyleSheet.value("15rem")} color="black" />
@@ -294,12 +391,20 @@ export default function ListSertifikasiScreen(props){
                                                 </View>
                                                
                                             </View>
-                                            <View style={{flex:1,alignItems:"flex-end"}}>
-                                                <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. 7.000.000</Text>
-                                                <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. 4.500.000</Text>
-                                            </View>
+                                            {
+                                                (promo) ?
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapromopaketpelatihan)}</Text>
+                                                </View>
+                                                :
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through",opacity:0}}>0</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                </View>
+                                            }
                                         </View>
-                                    </View>
+                                    </Pressable>
                                 )
                             }}
                             />
@@ -307,16 +412,23 @@ export default function ListSertifikasiScreen(props){
                         <View>
                         <FlatList
                             contentContainerStyle={{padding:EStyleSheet.value("20rem"),paddingVertical:0}}
-                            data={[1,2,3,4,5]}
+                            data={listtiga}
                             renderItem={({item,index})=>{
+                                let {promo,index:indexpromo} = findPromoArray(item.item);
+
                                 return (
-                                    <View style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
-                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6</Text>
+                                    <Pressable 
+                                    onPress={()=>{
+                                
+                                        props.navigation.navigate("DetailSertifikasi");
+                                    }}
+                                    style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
+                                        <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
                                         <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
                                             <View style={{flex:1}}>
                                                 <View style={{flexDirection:"row",alignItems:"center"}}>
                                                     <MaterialIcons name="date-range" size={EStyleSheet.value("16rem")} style={{marginRight:EStyleSheet.value("3rem")}} color="black" />
-                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>20 November 2021</Text>
+                                                    <Text style={{fontSize:EStyleSheet.value("13rem"),fontWeight:"bold",marginBottom:EStyleSheet.value("3rem")}}>{toLocaleTimestamp(item.jadwaltraining)}</Text>
                                                 </View>
                                                 <View style={{flexDirection:"row",alignItems:"center",marginTop:EStyleSheet.value("5rem")}}>
                                                     <MaterialIcons name="place" size={EStyleSheet.value("15rem")} color="black" />
@@ -324,12 +436,20 @@ export default function ListSertifikasiScreen(props){
                                                 </View>
                                                
                                             </View>
-                                            <View style={{flex:1,alignItems:"flex-end"}}>
-                                                <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. 7.000.000</Text>
-                                                <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. 4.500.000</Text>
-                                            </View>
+                                            {
+                                                (promo) ?
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through"}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapromopaketpelatihan)}</Text>
+                                                </View>
+                                                :
+                                                <View style={{flex:1,alignItems:"flex-end"}}>
+                                                    <Text style={{fontWeight:"bold",color:"red",textDecorationLine:"line-through",opacity:0}}>0</Text>
+                                                    <Text style={{fontWeight:"bold",fontSize:EStyleSheet.value("15rem")}}>Rp. {formatRupiah(item.item[indexpromo].hargapaketpelatihan)}</Text>
+                                                </View>
+                                            }
                                         </View>
-                                    </View>
+                                    </Pressable>
                                 )
                             }}
                             />

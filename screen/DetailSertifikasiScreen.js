@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput, BackHandler } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
 import Svg, { Path, Circle } from "react-native-svg"
@@ -10,6 +10,9 @@ import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Collapsible from 'react-native-collapsible';
+
+import {endpoint} from '../utils/endpoint';
+import {toLocaleTimestamp} from '../utils/utils';
 
 let shadow = {
     shadowColor: "#000",
@@ -35,17 +38,44 @@ let shadow2 = {
     elevation: 3,
 }
 
+let interval = {};
+
 export default function DetailSertifikasiScreen(props){
 
     let [dataLoaded, setDataLoaded] = useState(false);
 
     let [deskripsiHidden, setDeskripsHidden] = useState(false);
 
-    useEffect(()=>{    
+ 
+    useEffect(()=>{
+        interval.testing = setInterval(() => {
+            console.log("tesinterval");
+        }, 1000);  
+    },[])
+
+
+    useEffect(() => {
+        const backAction = () => {
+          clearInterval(interval.testing);
+          return false;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => backHandler.remove();
+      }, []);
+
+    useEffect(()=>{   
+        console.log(props.route.params.item);
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
     },[])
+
+   
 
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
@@ -60,7 +90,7 @@ export default function DetailSertifikasiScreen(props){
                     <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Insiden Investigasi Batch 6</Text>
+                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{props.route.params.item.namatraining}</Text>
                 </View>
             </View>
             {
