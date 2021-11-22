@@ -108,6 +108,7 @@ export default function DetailIdentitasCheckoutShopScreen(props){
                     if(response.success){
                         globalContext.setKeranjangShop([]);
                         setInvoice(response);
+                        console.log(response);
                         props.navigation.dispatch(state => {
                             // Remove the home route from the stack
                             let routes = state.routes.filter(r => !r.name.match(/(DetailItemCheckoutShop|DetailIdentitasCheckoutShop)/));

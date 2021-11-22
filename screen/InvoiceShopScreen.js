@@ -10,6 +10,7 @@ import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { CommonActions } from '@react-navigation/native';
+import {toLocaleTimestamp, formatRupiah} from '../utils/utils';
 
 import Collapsible from 'react-native-collapsible';
 
@@ -110,7 +111,7 @@ export default function InvoiceShopScreen(props){
                                         <Text style={{fontWeight:"bold"}}>Nomor Invoice</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>123131247193712893729837219873219873129387</Text>
+                                        <Text style={{fontWeight:"bold"}}>{props.route.params.item.kodeinvoice}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -125,7 +126,7 @@ export default function InvoiceShopScreen(props){
                                         <Text style={{}}>Tanggal</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>12 Agustus 2021</Text>
+                                        <Text style={{fontWeight:"bold"}}>{toLocaleTimestamp(new Date())}</Text>
                                     </View>
                                 </View>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
@@ -141,7 +142,7 @@ export default function InvoiceShopScreen(props){
                                         <Text style={{}}>Nomor Rekening</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>16555123129032139</Text>
+                                        <Text style={{fontWeight:"bold"}}>124-00-0994-4514</Text>
                                     </View>
                                 </View>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
@@ -149,11 +150,11 @@ export default function InvoiceShopScreen(props){
                                         <Text style={{}}>Total Pembayaran</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>5.000.000</Text>
+                                        <Text style={{fontWeight:"bold"}}>Rp. {formatRupiah(props.route.params.item.totaldibayar)}</Text>
                                     </View>
                                 </View>
                                 <View style={{marginTop:EStyleSheet.value("10rem")}}>
-                                    <Text style={{lineHeight:25,color:"red",fontWeight:"bold"}}>Silakan lakukan konfirmasi pembayaran ke nomor whatsapp berikut 08180344572 setelah berhasil melakukan pembayaran.</Text>
+                                    <Text style={{lineHeight:25,color:"red",fontWeight:"bold"}}>Silakan lakukan konfirmasi pembayaran ke nomor whatsapp berikut 08116565850 setelah berhasil melakukan pembayaran.</Text>
                                 </View>
                             </View>
                         </View>

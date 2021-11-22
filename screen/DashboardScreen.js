@@ -254,10 +254,10 @@ export default function DashboardScreen(props){
                       {
                           (availableTrainingLoaded) ?
                           availableTraining.map((item)=>{
-                              console.log(item);
                               return (
                                 <Pressable
                                 onPress={()=>{
+                                    console.log(item);
                                     props.navigation.navigate("ListSertifikasi");
                                 }}
                                 >
