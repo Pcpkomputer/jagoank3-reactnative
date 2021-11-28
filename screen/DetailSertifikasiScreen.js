@@ -12,7 +12,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Collapsible from 'react-native-collapsible';
 
 import {endpoint} from '../utils/endpoint';
-import {toLocaleTimestamp} from '../utils/utils';
+import {toLocaleTimestamp, makeid, formatRupiah} from '../utils/utils';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
 let shadow = {
     shadowColor: "#000",
@@ -44,14 +45,126 @@ export default function DetailSertifikasiScreen(props){
 
     let [dataLoaded, setDataLoaded] = useState(false);
 
+    let [selectedPromo, setSelectedPromo] = useState(0);
+
     let [deskripsiHidden, setDeskripsHidden] = useState(false);
 
- 
-    useEffect(()=>{
-        interval.testing = setInterval(() => {
-            console.log("tesinterval");
-        }, 1000);  
+    let [kursiTersisa, setKursiTersisa] = useState(0);
+    let [kuotaKursi, setKuotaKursi] = useState(0);
+
+    let [item,setItem] = useState(props.route.params.item);
+
+    let [timerPlaceholderLoaded, setTimerPlaceholderLoaded] = useState(false);
+    let [timerPlaceholder, setTimerPlaceholder] = useState({});
+
+    let getStokKursi = async (id_training,id_itemtraining)=>{
+      
+        let request = await fetch(`${endpoint}/getstokkursi`,{
+            method:"POST",
+            headers: {
+                "content-type":"application/json"
+            },
+            body:JSON.stringify({
+                id_training:props.route.params.item.id_training,
+                id_itemtraining:id_itemtraining
+            })
+        });
+        let response = await request.json();
+        return response;
+    }
+
+    useEffect(async ()=>{
+        
+        let stokkursi = props.route.params.item.item.map((el,index)=>{
+            return getStokKursi(el.id_training,el.id);
+        })
+
+        let stokkursi2 = await Promise.all(stokkursi);
+
+        setItem((prev,index)=>{
+            return {
+                ...prev,
+                item:[
+                    ...stokkursi2
+
+                ]
+            }
+        });
+
+
+        setKuotaKursi(stokkursi2[0].stokkursi);
+        setKursiTersisa(stokkursi2[0].stokkursi-stokkursi2[0].kursiterpenuhi);
+
+        props.route.params.item.item.map((el,index)=>{
+            
+
+            setTimerPlaceholder((prev)=>{
+
+                let obj = {...prev};
+                obj[el.id] = {
+                    hari:"00",
+                    jam:"00",
+                    menit:"00",
+                    detik:"00"
+                }
+                return obj;
+            })
+        });
+        setTimerPlaceholderLoaded(true);
+        setDataLoaded(true);
     },[])
+
+
+    useEffect(()=>{
+        if(timerPlaceholderLoaded){
+            Object.entries(timerPlaceholder).map((el,index)=>{
+                let id = el[0];
+
+                let matched = props.route.params.item.item.filter((ele,index)=>{
+                   
+                    if(ele.id===id){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                });
+
+                let countdownDate = new Date(Date.parse(matched[0].tanggalpromoberakhir.replace(/\-/g,'/'))).getTime();
+
+                
+
+                 interval[id] = setInterval(function() {
+
+                    // Get today's date and time
+                    var now = new Date().getTime();
+                  
+                    // Find the distance between now and the count down date
+                    var distance = countdownDate - now;
+                  
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    setTimerPlaceholder((prev)=>{
+                        let p = {...prev};
+                        p[id] = {
+                            ...p[id],
+                            hari:days,
+                            jam:hours,
+                            menit:minutes,
+                            detik:seconds
+                        }
+                        return p;
+                    })
+                },1000)
+
+            })
+        }
+    },[timerPlaceholderLoaded])
+
 
 
     useEffect(() => {
@@ -68,12 +181,6 @@ export default function DetailSertifikasiScreen(props){
         return () => backHandler.remove();
       }, []);
 
-    useEffect(()=>{   
-        console.log(props.route.params.item);
-        setTimeout(() => {
-            setDataLoaded(true);
-        }, 1000);
-    },[])
 
    
 
@@ -90,11 +197,11 @@ export default function DetailSertifikasiScreen(props){
                     <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{props.route.params.item.namatraining}</Text>
+                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
                 </View>
             </View>
             {
-                (dataLoaded) &&
+                (dataLoaded && timerPlaceholderLoaded) &&
                 <Pressable 
                 onPress={()=>{
                     props.navigation.navigate("DetailIdentitasCheckoutSertifikasi");
@@ -107,17 +214,17 @@ export default function DetailSertifikasiScreen(props){
                 </Pressable>
             }
             {
-                (dataLoaded) &&
+                (dataLoaded && timerPlaceholderLoaded) &&
                 <ScrollView style={{backgroundColor:"whitesmoke"}}>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),zIndex:1,paddingTop:EStyleSheet.value("20rem")}}>
                         <View style={{...shadow,backgroundColor:"white",borderTopRightRadius:EStyleSheet.value("20rem"),borderTopLeftRadius:EStyleSheet.value("20rem")}}>
-                            <Text style={{color:"grey",padding:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center",textAlign:"center"}}>Pembinaan & Sertifikasi Operator K3 Umum BNS asdsadsadasdsandsiadnaidnaidnaaskldalkdsalkdsamldmakP</Text>
+                            <Text style={{color:"grey",padding:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center",textAlign:"center"}}>{item.namatraining}</Text>
                             <View style={{backgroundColor:"#e8e8e8",height:EStyleSheet.value("450rem")}}>
-                                <Text>555</Text>
+                                <Image style={{width:"100%",height:"100%"}} source={{uri:`${endpoint.replace("/api","")}/storage/public/training/${item.foto}`}}></Image>
                             </View>
                             <View style={{marginTop:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                                 <Text style={{fontSize:EStyleSheet.value("12rem"),color:"grey",marginBottom:EStyleSheet.value("5rem")}}>Jadwal Training</Text>
-                                <Text>4 - 11 Desember 2021</Text>
+                                <Text>{toLocaleTimestamp(item.jadwaltraining)}</Text>
                             </View>
                             <View style={{height:EStyleSheet.value("10rem")}}>
                             </View>
@@ -128,58 +235,83 @@ export default function DetailSertifikasiScreen(props){
                             <Text style={{fontSize:EStyleSheet.value("16rem"),fontWeight:"bold",color:"white"}}>Diskon Saat Ini</Text>
                         </View>
                         <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingBottom:EStyleSheet.value("20rem")}}>
-                            <View style={{backgroundColor:"#fafafa",paddingBottom:EStyleSheet.value("10rem"),marginBottom:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("10rem"),borderWidth:5,borderColor:"#fe0000"}}>
-                                <View style={{paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("50rem")}}>
-                                    <Text style={{textAlign:"center",fontWeight:'bold',color:"#fe0000"}}>Harga Earlybird Operator K3 Umum akan berakhir dalammmmmmmmmmmmmmmksmksmadkddnaskdmamdsmdsamdmsmmmmmmmmmmsdfkjdsfjsdfjsldjfsdklfjdsklfjsdlkfjdlsfjdslfjdslfj</Text>
-                                </View>
-                                <View style={{paddingVertical:EStyleSheet.value("10rem"),marginBottom:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("10rem"),flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
-                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
-                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>08</Text>
-                                        </View>
-                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>HARI</Text>
-                                    </View>
-                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
-                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>08</Text>
-                                        </View>
-                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>JAM</Text>
-                                    </View>
-                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
-                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>08</Text>
-                                        </View>
-                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>MENIT</Text>
-                                    </View>
-                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
-                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>08</Text>
-                                        </View>
-                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>DETIK</Text>
-                                    </View>
-                                </View>
-                                <View style={{justifyContent:"flex-end",alignItems:"flex-end",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                                    <Text style={{fontWeight:"bold",color:"#fe0000",textDecorationLine:"line-through"}}>Rp. 5.500.000</Text>
-                                </View>
-                                <View style={{justifyContent:"space-between",flexDirection:"row",marginBottom:EStyleSheet.value("10rem"),alignItems:"space-between",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                                    <View style={{borderWidth:1.5,borderColor:"#fe0000",borderRadius:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
-                                        <Text style={{color:"#fe0000"}}>Yang Anda Pilih</Text>
-                                    </View>
-                                    <Text style={{fontWeight:"bold",color:"#fe0000",fontSize:EStyleSheet.value("27rem"),color:"rgb(38, 180, 149)"}}>Rp. 5.500.000</Text>
-                                </View>
-                            </View>
-                            <View style={{backgroundColor:"#fafafa",borderRadius:EStyleSheet.value("10rem"),padding:EStyleSheet.value("20rem")}}>
-                                <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
-                                     <Text style={{flex:1,paddingRight:EStyleSheet.value("20rem")}}>Promo Operator K3 Umsdaioasoidsaoindoiandioasndoiasndoiasndiosandosaindasum</Text>
-                                     <Text style={{fontWeight:"bold",color:"#fe0000",textDecorationLine:"line-through"}}>Rp. 5.500.000</Text>
-                                </View>
-                                <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem"),justifyContent:"space-between",alignItems:"center"}}>
-                                    <View style={{borderWidth:1.5,borderColor:"#fe0000",opacity:0,borderRadius:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
-                                        <Text style={{color:"#fe0000"}}>Yang Anda Pilih</Text>
-                                    </View>
-                                    <Text style={{fontWeight:"bold",color:"#fe0000",fontSize:EStyleSheet.value("27rem"),color:"rgb(38, 180, 149)"}}>Rp. 5.500.000</Text>
-                                </View>
-                            </View>
+                            {
+                                (item.item).map((el,index)=>{
+
+                                    if(el.sedangpromo){
+                                        return (
+                                            <TouchableOpacity
+                                            activeOpacity={0.8}
+                                            onPress={()=>{
+                                                setSelectedPromo(index);
+                                            }}
+                                            style={{backgroundColor:"#fafafa",paddingBottom:EStyleSheet.value("10rem"),marginBottom:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("10rem"),borderWidth:(selectedPromo===index) ? 5:0,borderColor:"#fe0000"}}>
+                                                <View style={{paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("50rem")}}>
+                                                    <Text style={{textAlign:"center",fontWeight:'bold',color:"#fe0000"}}>{el.namapaketpelatihan}</Text>
+                                                </View>
+                                                <View style={{paddingVertical:EStyleSheet.value("10rem"),marginBottom:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("10rem"),flexDirection:"row",marginTop:EStyleSheet.value("10rem")}}>
+                                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
+                                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>{timerPlaceholder[el.id].hari}</Text>
+                                                        </View>
+                                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>HARI</Text>
+                                                    </View>
+                                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
+                                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>{timerPlaceholder[el.id].jam}</Text>
+                                                        </View>
+                                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>JAM</Text>
+                                                    </View>
+                                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
+                                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>{timerPlaceholder[el.id].menit}</Text>
+                                                        </View>
+                                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>MENIT</Text>
+                                                    </View>
+                                                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                                        <View style={{backgroundColor:"#fe0000",justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("15rem"),width:EStyleSheet.value("50rem"),height:EStyleSheet.value("50rem")}}>
+                                                            <Text style={{color:"white",fontSize:EStyleSheet.value("23rem"),fontWeight:"bold"}}>{timerPlaceholder[el.id].detik}</Text>
+                                                        </View>
+                                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontSize:EStyleSheet.value("12rem"),color:"#fe0000",fontWeight:"bold"}}>DETIK</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{justifyContent:"flex-end",alignItems:"flex-end",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                                                    <Text style={{fontWeight:"bold",color:"#fe0000",textDecorationLine:"line-through"}}>Rp. {formatRupiah(el.hargapaketpelatihan)}</Text>
+                                                </View>
+                                                <View style={{justifyContent:"space-between",flexDirection:"row",marginBottom:EStyleSheet.value("10rem"),alignItems:"space-between",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                                                    <View style={{borderWidth:1.5,opacity:(selectedPromo===index) ? 1:0,borderColor:"#fe0000",borderRadius:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
+                                                        <Text style={{color:"#fe0000"}}>Yang Anda Pilih</Text>
+                                                    </View>
+                                                    <Text style={{fontWeight:"bold",color:"#fe0000",fontSize:EStyleSheet.value("27rem"),color:"rgb(38, 180, 149)"}}>Rp. {formatRupiah(el.hargapromopaketpelatihan)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+                                    else{
+                                        return (
+                                            <TouchableOpacity
+                                            activeOpacity={0.8}
+                                            onPress={()=>{
+                                                setSelectedPromo(index);
+                                            }}
+                                            style={{backgroundColor:"#fafafa",marginBottom:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("10rem"),borderWidth:(selectedPromo===index) ? 5:0,borderColor:"#fe0000",padding:EStyleSheet.value("20rem")}}>
+                                                <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
+                                                    <Text style={{flex:1,paddingRight:EStyleSheet.value("20rem")}}>{el.namapaketpelatihan}</Text>
+                                                    <Text style={{fontWeight:"bold",color:"#fe0000",textDecorationLine:"line-through"}}></Text>
+                                                </View>
+                                                <View style={{flexDirection:"row",marginTop:EStyleSheet.value("10rem"),justifyContent:"space-between",alignItems:"center"}}>
+                                                    <View style={{borderWidth:1.5,borderColor:"#fe0000",opacity:(selectedPromo===index) ? 1:0,borderRadius:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
+                                                        <Text style={{color:"#fe0000"}}>Yang Anda Pilih</Text>
+                                                    </View>
+                                                    <Text style={{fontWeight:"bold",color:"#fe0000",fontSize:EStyleSheet.value("27rem"),color:"rgb(38, 180, 149)"}}>Rp. {formatRupiah(el.hargapaketpelatihan)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+                                })
+                            }
+                             
+                          
                         </View>
                     </View>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("90rem")}}>
@@ -187,7 +319,7 @@ export default function DetailSertifikasiScreen(props){
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginVertical:EStyleSheet.value("20rem")}}>
                                 <View style={{backgroundColor:"#ededed",position:"relative",overflow:"hidden",height:EStyleSheet.value("40rem"),borderRadius:EStyleSheet.value("10rem")}}>
                                     <View style={{position:"absolute",width:"50%",backgroundColor:"rgb(38, 180, 140)",height:"100%"}}></View>
-                                    <Text style={{color:"black",fontWeight:"bold",textAlign:"center",height:"100%",textAlignVertical:"center"}}>Tersisa 30 dari 30</Text>
+                                    <Text style={{color:"black",fontWeight:"bold",textAlign:"center",height:"100%",textAlignVertical:"center"}}>Tersisa {kursiTersisa} dari {kuotaKursi}</Text>
                                 </View>
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("20rem")}}>
@@ -243,7 +375,7 @@ export default function DetailSertifikasiScreen(props){
                 </ScrollView>
             }
             {
-                (!dataLoaded) &&
+                (!dataLoaded && timerPlaceholderLoaded) &&
                 <View style={{flex:1,justifyContent:"center",backgroundColor:"whitesmoke",alignItems:"center"}}>
                     <ActivityIndicator size="large" color="rgb(38, 180, 149)"/>
                 </View>
