@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons,MaterialIcons, AntDesign } from '@expo/vector-icons'; 
@@ -9,6 +9,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
+
+import {extractInisial} from '../utils/utils';
+import {GlobalContext} from '../App';
 
 let shadow = {
     shadowColor: "#000",
@@ -57,6 +60,8 @@ export default function TabProfil(props){
     //     }
     // },[focused])
 
+    let globalContext = useContext(GlobalContext);
+
     return (
         <View style={{flex:1,backgroundColor:"whitesmoke"}}>
             <View style={{height:StatusBarHeight}}></View>
@@ -80,11 +85,11 @@ export default function TabProfil(props){
                         <View style={{height:EStyleSheet.value("220rem"),marginHorizontal:EStyleSheet.value("20rem"),justifyContent:"flex-end"}}>
                             <View style={{backgroundColor:"white",height:EStyleSheet.value("145rem"),borderRadius:EStyleSheet.value("10rem")}}>
                                 <View style={{backgroundColor:"#ff5715",justifyContent:"center",alignItems:"center",alignSelf:"center",position:"absolute",borderRadius:EStyleSheet.value("10rem"),bottom:EStyleSheet.value("100rem"),width:EStyleSheet.value("100rem"),height:EStyleSheet.value("100rem")}}>
-                                    <Text style={{color:"white",fontSize:EStyleSheet.value("50rem"),fontWeight:"bold"}}>PP</Text>
+                                    <Text style={{color:"white",fontSize:EStyleSheet.value("50rem"),fontWeight:"bold"}}>{extractInisial(globalContext.credentials.detail.nama)}</Text>
                                 </View>
                                 <View style={{marginTop:EStyleSheet.value("125rem")/2-EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center"}}>
-                                    <Text style={{color:"grey",fontWeight:"bold"}}>PADANG PERWIRA YUDHA</Text>
-                                    <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem"),marginTop:EStyleSheet.value("3rem")}}>yudhacode</Text>
+                                    <Text style={{color:"grey",fontWeight:"bold"}}>{globalContext.credentials.detail.nama}</Text>
+                                    <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem"),marginTop:EStyleSheet.value("3rem")}}>{globalContext.credentials.detail.nama}</Text>
                                 </View>
                                 <View style={{flex:1,justifyContent:"flex-end"}}>
                                     <View style={{paddingVertical:EStyleSheet.value("7rem"),flexDirection:"row",borderTopWidth:0.5,borderColor:"grey",paddingHorizontal:EStyleSheet.value("10rem")}}>
