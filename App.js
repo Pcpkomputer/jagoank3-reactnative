@@ -235,6 +235,13 @@ function MyStack(){
 
   let [keranjangShop, setKeranjangShop] = useState([]);
 
+  let [pemesanan, setPemesanan] = useState({
+    keranjang:[],
+    voucher:null,
+    diskon:null
+
+  })
+
 
   let [appLoaded, setAppLoaded] = useState(false);
   let [credentials, setCredentials] = useState(null);
@@ -262,7 +269,7 @@ function MyStack(){
 
   if(credentials){
     return (
-      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop}}>
+      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop,pemesanan,setPemesanan}}>
           <NavigationContainer>
           <Stack.Navigator
           >
@@ -391,7 +398,7 @@ function MyStack(){
   }
   else{
     return (
-      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop}}>
+      <GlobalContext.Provider value={{credentials,setCredentials,keranjangShop,setKeranjangShop,pemesanan,setPemesanan}}>
           <NavigationContainer>
           <Stack.Navigator
           >

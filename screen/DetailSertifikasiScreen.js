@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput, BackHandler } from 'react-native';
+import React, {useState, useEffect, useRef, useContext} from 'react';
+import { StyleSheet, Text, View, Dimensions, ScrollView, useWindowDimensions, FlatList, Image, Pressable, ActivityIndicator, TextInput, BackHandler } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
 import Svg, { Path, Circle } from "react-native-svg"
@@ -9,11 +9,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import RenderHtml from 'react-native-render-html';
+
 import Collapsible from 'react-native-collapsible';
 
 import {endpoint} from '../utils/endpoint';
 import {toLocaleTimestamp, makeid, formatRupiah} from '../utils/utils';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+
+import {GlobalContext} from '../App';
 
 let shadow = {
     shadowColor: "#000",
@@ -43,14 +47,29 @@ let interval = {};
 
 export default function DetailSertifikasiScreen(props){
 
+    const { width } = useWindowDimensions();
+
+    let globalContext = useContext(GlobalContext);
+
+
     let [dataLoaded, setDataLoaded] = useState(false);
 
     let [selectedPromo, setSelectedPromo] = useState(0);
 
-    let [deskripsiHidden, setDeskripsHidden] = useState(false);
+    let [deskripsiHidden, setDeskripsHidden] = useState(true);
+    let [persyaratanHidden, setPersyaratanHidden] = useState(true);
+    let [fasilitasHidden, setFasilitasHidden] = useState(true);
+    let [infoPendaftaranHidden, setInfoPendaftaranHidden] = useState(true);
+    let [instrukturHidden, setInstrukturHidden] = useState(true);
+    let [ulasanHidden, setUlasanHidden] = useState(true);
+
+    let [txtVoucher, setTxtVoucher] = useState("");
+    let [voucherLoading, setVoucherLoading] = useState(false);
+    let [useVoucher, setUseVoucher] = useState(false);
 
     let [kursiTersisa, setKursiTersisa] = useState(0);
     let [kuotaKursi, setKuotaKursi] = useState(0);
+    let [kuotaTerpenuhi, setKuotaTerpenuhi] = useState(0);
 
     let [item,setItem] = useState(props.route.params.item);
 
@@ -94,6 +113,8 @@ export default function DetailSertifikasiScreen(props){
 
         setKuotaKursi(stokkursi2[0].stokkursi);
         setKursiTersisa(stokkursi2[0].stokkursi-stokkursi2[0].kursiterpenuhi);
+        setKuotaTerpenuhi(stokkursi2[0].kursiterpenuhi);
+        
 
         props.route.params.item.item.map((el,index)=>{
             
@@ -169,7 +190,9 @@ export default function DetailSertifikasiScreen(props){
 
     useEffect(() => {
         const backAction = () => {
-          clearInterval(interval.testing);
+          Object.keys(interval).map((key,index)=>{
+              clearInterval(interval[key]);
+          })
           return false;
         };
     
@@ -204,6 +227,20 @@ export default function DetailSertifikasiScreen(props){
                 (dataLoaded && timerPlaceholderLoaded) &&
                 <Pressable 
                 onPress={()=>{
+
+
+                    globalContext.setPemesanan((prev)=>{
+                        return {
+                          ...prev,
+                          keranjang:[
+                            {
+                              training:props.route.params.item,
+                              itemtraining:props.route.params.item.item[selectedPromo]
+                            }
+                          ]
+                        }
+                      });
+                    
                     props.navigation.navigate("DetailIdentitasCheckoutSertifikasi");
                 }}
                 android_ripple={{
@@ -242,8 +279,10 @@ export default function DetailSertifikasiScreen(props){
                                         return (
                                             <TouchableOpacity
                                             activeOpacity={0.8}
-                                            onPress={()=>{
+                                            onPress={async ()=>{
                                                 setSelectedPromo(index);
+                                                let response = await getStokKursi(el.id_training,el.id);
+                                                console.log(response);
                                             }}
                                             style={{backgroundColor:"#fafafa",paddingBottom:EStyleSheet.value("10rem"),marginBottom:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("10rem"),borderWidth:(selectedPromo===index) ? 5:0,borderColor:"#fe0000"}}>
                                                 <View style={{paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("50rem")}}>
@@ -324,16 +363,63 @@ export default function DetailSertifikasiScreen(props){
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("20rem")}}>
                                 <View style={{backgroundColor:"white",borderColor:"#eb2d2a",borderWidth:1,position:"relative",overflow:"hidden",height:EStyleSheet.value("40rem"),borderRadius:EStyleSheet.value("10rem")}}>
-                                    <Text style={{color:"#eb2d2a",fontWeight:"bold",textAlign:"center",height:"100%",textAlignVertical:"center",fontSize:EStyleSheet.value("13rem")}}>0 orang sudah mengikuti sertifikasi ini</Text>
+                                    <Text style={{color:"#eb2d2a",fontWeight:"bold",textAlign:"center",height:"100%",textAlignVertical:"center",fontSize:EStyleSheet.value("13rem")}}>{kuotaTerpenuhi} orang sudah mengikuti sertifikasi ini</Text>
                                 </View>
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("20rem")}}>
                                 <Text style={{fontWeight:"bold"}}>Kode Voucher :</Text>
                                 <View style={{marginTop:EStyleSheet.value("10rem"),flexDirection:"row",paddingBottom:EStyleSheet.value("0rem"),borderBottomWidth:1}}>
-                                    <TextInput style={{flex:1,paddingRight:EStyleSheet.value("20rem")}}/>
-                                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),backgroundColor:"rgb(38, 180, 140)",justifyContent:"center",alignItems:"center"}}>
-                                        <Text style={{color:"white"}}>Check</Text>
-                                    </View>
+                                    <TextInput 
+                                    onChangeText={(text)=>{
+                                        setTxtVoucher(text);
+                                    }}
+                                    editable={useVoucher ? false:true}
+                                    value={txtVoucher}
+                                    style={{flex:1,paddingRight:EStyleSheet.value("20rem")}}/>
+                                    {
+                                        (voucherLoading) ?
+                                        <View
+                                        style={{paddingHorizontal:EStyleSheet.value("20rem"),backgroundColor:"rgb(38, 180, 140)",justifyContent:"center",alignItems:"center"}}>
+                                            <ActivityIndicator color="white"/>
+                                        </View>
+                                        :
+                                        <TouchableOpacity 
+                                        activeOpacity={0.8}
+                                        onPress={async ()=>{
+                                            if(txtVoucher.length>0){
+                                                setVoucherLoading(true);
+                                                let request = await fetch(`${endpoint}/checkvoucher`,{
+                                                    method:"POST",
+                                                    headers: {
+                                                        "content-type":"application/json"
+                                                    },
+                                                    body:JSON.stringify({
+                                                        kodevoucher:txtVoucher
+                                                    })
+                                                });
+                                                let response = await request.json();
+                                                if(response.success){
+                                                    setVoucherLoading(false);
+                                                    setUseVoucher(true);
+                                                    let {voucher} = response.data;
+                                                    globalContext.setPemesanan((prev)=>{
+                                                      return {
+                                                        ...prev,
+                                                        voucher:voucher,
+                                                        diskon:voucher
+                                                      }
+                                                    });
+                                                }   
+                                                else{
+                                                    alert(response.msg);
+                                                    setVoucherLoading(false);
+                                                }
+                                            }
+                                        }}
+                                        style={{paddingHorizontal:EStyleSheet.value("20rem"),flex:1,backgroundColor:"rgb(38, 180, 140)",justifyContent:"center",alignItems:"center"}}>
+                                            <Text style={{color:"white"}}>Check</Text>
+                                        </TouchableOpacity>
+                                    }
                                 </View>
                             </View>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("20rem")}}>
@@ -347,8 +433,20 @@ export default function DetailSertifikasiScreen(props){
                                     </Pressable>
                                     <View style={{}}>
                                         <Collapsible  collapsed={deskripsiHidden}>
-                                            <View style={{marginVertical:EStyleSheet.value("10rem")}}>
-                                                <Text>123</Text>
+                                            <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.deskripsipenuh
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
                                             </View>
                                         </Collapsible>
                                     </View>
@@ -356,15 +454,139 @@ export default function DetailSertifikasiScreen(props){
                                 <View style={{marginBottom:EStyleSheet.value("3rem")}}>
                                     <Pressable 
                                     onPress={()=>{
-                                        setDeskripsHidden(!deskripsiHidden);
+                                        setPersyaratanHidden(!persyaratanHidden)
                                     }}
                                     style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
-                                        <Text>Deskripsi</Text>
+                                        <Text>Persyaratan</Text>
                                     </Pressable>
-                                    <View style={{marginBottom:EStyleSheet.value("50rem")}}>
-                                        <Collapsible  collapsed={deskripsiHidden}>
-                                            <View style={{marginVertical:EStyleSheet.value("10rem")}}>
-                                                <Text>123</Text>
+                                    <View style={{marginBottom:EStyleSheet.value("0rem")}}>
+                                        <Collapsible  collapsed={persyaratanHidden}>
+                                        <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.persyaratan
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
+                                            </View>
+                                        </Collapsible>
+                                    </View>
+                                </View>
+                                <View style={{marginBottom:EStyleSheet.value("3rem")}}>
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setFasilitasHidden(!fasilitasHidden)
+                                    }}
+                                    style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                                        <Text>Fasilitas</Text>
+                                    </Pressable>
+                                    <View style={{marginBottom:EStyleSheet.value("0rem")}}>
+                                        <Collapsible  collapsed={fasilitasHidden}>
+                                        <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.fasilitas
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
+                                            </View>
+                                        </Collapsible>
+                                    </View>
+                                </View>
+                                <View style={{marginBottom:EStyleSheet.value("3rem")}}>
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setInfoPendaftaranHidden(!infoPendaftaranHidden)
+                                    }}
+                                    style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                                        <Text>Info Pendaftaran</Text>
+                                    </Pressable>
+                                    <View style={{marginBottom:EStyleSheet.value("0rem")}}>
+                                        <Collapsible  collapsed={infoPendaftaranHidden}>
+                                        <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.infopendaftaran
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
+                                            </View>
+                                        </Collapsible>
+                                    </View>
+                                </View>
+                                <View style={{marginBottom:EStyleSheet.value("3rem")}}>
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setInstrukturHidden(!instrukturHidden)
+                                    }}
+                                    style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                                        <Text>Instruktur</Text>
+                                    </Pressable>
+                                    <View style={{marginBottom:EStyleSheet.value("0rem")}}>
+                                        <Collapsible  collapsed={instrukturHidden}>
+                                        <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.instruktur
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
+                                            </View>
+                                        </Collapsible>
+                                    </View>
+                                </View>
+                                <View style={{marginBottom:EStyleSheet.value("3rem")}}>
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setUlasanHidden(!ulasanHidden)
+                                    }}
+                                    style={{backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),...shadow2,paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                                        <Text>Ulasan</Text>
+                                    </Pressable>
+                                    <View style={{marginBottom:EStyleSheet.value("20rem")}}>
+                                        <Collapsible  collapsed={ulasanHidden}>
+                                        <View style={{paddingVertical:EStyleSheet.value("5rem")}}>
+                                            <RenderHtml
+                                            baseStyle={{paddingHorizontal:EStyleSheet.value("0rem")}}
+                                            contentWidth={width}
+                                            source={{
+                                                html:props.route.params.item.ulasan
+                                            }}
+                                            enableExperimentalMarginCollapsing={true}
+                                            renderersProps={ {
+                                                img: {
+                                                enableExperimentalPercentWidth: true
+                                                }
+                                            }}
+                                            />
                                             </View>
                                         </Collapsible>
                                     </View>

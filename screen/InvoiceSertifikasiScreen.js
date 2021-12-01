@@ -37,6 +37,8 @@ let shadow2 = {
     elevation: 3,
 }
 
+import { toLocaleTimestamp, formatRupiah } from '../utils/utils';
+
 export default function InvoiceSertifikasiScreen(props){
 
     let [dataLoaded, setDataLoaded] = useState(false);
@@ -110,7 +112,7 @@ export default function InvoiceSertifikasiScreen(props){
                                         <Text style={{fontWeight:"bold"}}>Nomor Invoice</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>123131247193712893729837219873219873129387</Text>
+                                        <Text style={{fontWeight:"bold"}}>{props.route.params.item.kodeinvoice}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -125,7 +127,7 @@ export default function InvoiceSertifikasiScreen(props){
                                         <Text style={{}}>Tanggal</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>12 Agustus 2021</Text>
+                                        <Text style={{fontWeight:"bold"}}>{toLocaleTimestamp(new Date())}</Text>
                                     </View>
                                 </View>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
@@ -149,7 +151,7 @@ export default function InvoiceSertifikasiScreen(props){
                                         <Text style={{}}>Total Pembayaran</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>5.000.000</Text>
+                                        <Text style={{fontWeight:"bold"}}>{formatRupiah(props.route.params.item.totaldibayar)}</Text>
                                     </View>
                                 </View>
                                 <View style={{marginTop:EStyleSheet.value("10rem")}}>

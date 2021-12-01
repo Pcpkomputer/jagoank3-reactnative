@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
@@ -10,6 +10,10 @@ import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Collapsible from 'react-native-collapsible';
+import { GlobalContext } from '../App';
+
+import {toLocaleTimestamp, formatRupiah} from '../utils/utils';
+import {endpoint} from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "#000",
@@ -37,15 +41,67 @@ let shadow2 = {
 
 export default function DetailItemCheckoutSertifikasiScreen(props){
 
+    let globalContext = useContext(GlobalContext);
+
     let [dataLoaded, setDataLoaded] = useState(false);
 
     let [deskripsiHidden, setDeskripsHidden] = useState(false);
+
+    let [pemesananLoading, setPemesananLoading] = useState(false);
 
     useEffect(()=>{    
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
     },[])
+
+    let [jumlahBayar, setJumlahBayar] = useState(0);
+
+    let stillPromo = (date)=>{
+        let now = new Date().getTime();
+        let d = new Date(date.replace(/-/g,"/")).getTime();
+        return d>now;
+    }
+
+
+
+    useEffect(()=>{
+        let total = 0;
+        let diskon = 0;
+        globalContext.pemesanan.keranjang.map((item,index)=>{
+            if(item.itemtraining.sedangpromo){
+                let promosudahlewat = new Date().getTime()>new Date(item.itemtraining.tanggalpromoberakhir.replace(/-/g,"/")).getTime();
+                if(promosudahlewat){
+                    total = total+item.itemtraining.hargapaketpelatihan;
+                }
+                else{
+                    total = total+item.itemtraining.hargapromopaketpelatihan;
+                }
+            }
+            else{
+                total = total+item.itemtraining.hargapaketpelatihan;
+            }
+        });
+        
+        if(globalContext.pemesanan.diskon===null){
+            diskon = 0;
+        }
+        else{
+            diskon = globalContext.pemesanan.diskon.nominal;
+        }
+    
+        // if(referral){
+        //     referral = globalContext.pemesanan?.keranjang[0]?.training.nominalpemotonganreferral || 0;
+        // }   
+        // else{
+        //     referral=0;
+        // }
+    
+        let t = total-(diskon);
+        setJumlahBayar(t);
+    
+      },[]);
+
 
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
@@ -64,10 +120,50 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                 </View>
             </View>
             {
-                (dataLoaded) &&
+                (dataLoaded) ?
+                (pemesananLoading) ?
+                <View
+                style={{position:"absolute",bottom:0,zIndex:999,backgroundColor:"rgb(38, 180, 149)",justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("30rem"),width:"100%",height:EStyleSheet.value("60rem")}}>
+                    <ActivityIndicator color="white"/>
+                </View>
+                :
                 <Pressable 
-                onPress={()=>{
-                    props.navigation.navigate("InvoiceSertifikasi");
+                onPress={async ()=>{
+
+                    setPemesananLoading(true);
+                    
+                    let payload = {
+                        pemesanan:globalContext.pemesanan,
+                        credentials:globalContext.credentials,
+                        referral:null,
+                        totaldibayarfrontend:jumlahBayar
+
+                    };
+
+                   
+                    let request = await fetch(`${endpoint}/createinvoice`,{
+                        method:"POST",
+                        headers:{
+                            "content-type":"application/json",
+                            "authorization":`Bearer ${globalContext.credentials.token}`
+                        },
+                        body:JSON.stringify(payload)
+                    });
+                    let json = await request.json();
+
+                    console.log(json);
+
+                    if(json.success){
+                        props.navigation.navigate("InvoiceSertifikasi",{item:json});
+                        setPemesananLoading(false);
+                    }
+                    else{
+                        alert(json.msg);
+                        setPemesananLoading(false);
+                    }
+
+
+                    
                 }}
                 android_ripple={{
                     color:"#e8e8e8"
@@ -75,6 +171,8 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                 style={{position:"absolute",bottom:0,zIndex:999,backgroundColor:"rgb(38, 180, 149)",justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("30rem"),width:"100%",height:EStyleSheet.value("60rem")}}>
                     <Text style={{color:"white",fonPressableght:"bold",fontSize:EStyleSheet.value("18rem")}}>Proses Pemesanan</Text>
                 </Pressable>
+                :
+                null
             }
             {
                 (dataLoaded) &&
@@ -82,7 +180,32 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("70rem"),paddingBottom:EStyleSheet.value("20rem"),zIndex:1,paddingTop:EStyleSheet.value("20rem")}}>
                         <View style={{...shadow,backgroundColor:"white",paddingBottom:EStyleSheet.value("30rem"),borderBottomRightRadius:EStyleSheet.value("20rem"),borderBottomLeftRadius:EStyleSheet.value("20rem"),borderTopRightRadius:EStyleSheet.value("20rem"),borderTopLeftRadius:EStyleSheet.value("20rem")}}>
                             <Text style={{color:"rgb(38, 180, 149)",padding:EStyleSheet.value("20rem"),fontWeight:"bold",fontSize:EStyleSheet.value("18rem")}}>Pemesanan Anda</Text>
-                            <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
+                            {
+                                globalContext.pemesanan.keranjang.map((item,index)=>{
+                                    console.log(item);
+                                    return (
+                                         <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
+                                            <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
+                                                <View style={{flex:1}}>
+                                                    <Text style={{fontWeight:"bold"}}>{item.training.namatraining}</Text>
+                                                    <View style={{marginTop:EStyleSheet.value("5rem")}}>
+                                                        <Text>{toLocaleTimestamp(item.training.jadwaltraining)}</Text>
+                                                        <Text style={{marginTop:EStyleSheet.value("5rem"),fontWeight:"bold"}}>Rp. {stillPromo(item.itemtraining.tanggalpromoberakhir) ? formatRupiah(item.itemtraining.hargapromopaketpelatihan):formatRupiah(item.itemtraining.hargapaketpelatihan)}</Text>
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <View style={{width:EStyleSheet.value("80rem"),height:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke"}}>
+                                                         <Image style={{width:"100%",height:"100%"}} source={{uri:`${endpoint.replace("/api","")}/storage/public/training/${item.foto}`}}/>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            
+                                        </View>
+                                    )
+                                })
+                            }
+                            
+                            {/* <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
                                     <View style={{flex:1}}>
                                         <Text style={{fontWeight:"bold"}}>Ahli K3 Umum Batch 121</Text>
@@ -112,8 +235,8 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                                         </View>
                                     </View>
                                 </View>
-                                
-                            </View>
+                                 */}
+                            {/* </View> */}
 
 
 
@@ -122,9 +245,16 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
                                     <View style={{flex:1}}>
                                         <Text style={{fontWeight:"bold"}}>Kode Voucher</Text>
-                                        <View style={{marginTop:EStyleSheet.value("12rem")}}>
+                                        {
+                                            globalContext.pemesanan.voucher!==null ? 
+                                            <View style={{marginTop:EStyleSheet.value("12rem")}}>
+                                                <Text style={{backgroundColor:"whitesmoke",color:"grey",paddingVertical:EStyleSheet.value("8rem"),borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("8rem")}}>{globalContext.pemesanan.voucher.kode_voucher}</Text>
+                                            </View>
+                                            :
+                                            <View style={{marginTop:EStyleSheet.value("12rem")}}>
                                             <Text style={{backgroundColor:"whitesmoke",color:"grey",paddingVertical:EStyleSheet.value("8rem"),borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("8rem")}}>#####</Text>
                                         </View>
+                                        }
                                     </View>
                                 </View>
                             </View>
@@ -132,11 +262,17 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("10rem")}}>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",borderBottomWidth:0.5,paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>Promo Ahli K3 Batch Enak</Text>
+                                        {
+                                            globalContext.pemesanan.voucher!==null && 
+                                            <Text style={{fontWeight:"bold"}}>Promo Voucher {globalContext.pemesanan.voucher.kode_voucher}</Text>
+                                        }
                                     </View>
-                                    <View>
-                                        <Text>Rp. 8.000.000</Text>
-                                    </View>
+                                   {
+                                       globalContext.pemesanan.voucher!==null &&
+                                       <View>
+                                       <Text>Rp. {formatRupiah(globalContext.pemesanan.voucher.nominal)}</Text>
+                                   </View>
+                                   }
                                 </View>
                             </View>
 
@@ -147,7 +283,7 @@ export default function DetailItemCheckoutSertifikasiScreen(props){
                                         <Text style={{fontWeight:"bold"}}>Jumlah Bayar</Text>
                                     </View>
                                     <View>
-                                        <Text style={{fontWeight:"bold"}}>Rp. 8.000.000</Text>
+                                        <Text style={{fontWeight:"bold"}}>Rp. {formatRupiah(jumlahBayar)}</Text>
                                     </View>
                                 </View>
                             </View>
