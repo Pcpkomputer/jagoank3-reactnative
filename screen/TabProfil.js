@@ -116,6 +116,18 @@ export default function TabProfil(props){
                                 </View>
                                 <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Riwayat Transaksi</Text>
                             </View>
+                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
+                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
+                                </View>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Ambil Sertifikat</Text>
+                            </View>
+                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
+                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
+                                </View>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Keluar</Text>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
