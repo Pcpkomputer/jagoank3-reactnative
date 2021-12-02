@@ -23,6 +23,9 @@ import DetailIdentitasCheckoutShopScreen from './screen/DetailIdentitasCheckoutS
 import DetailItemCheckoutShopScreen from './screen/DetailItemCheckoutShopScreen';
 import InvoiceShopScreen from './screen/InvoiceShopScreen';
 import DetailWebinarScreen from './screen/DetailWebinarScreen';
+import DetailProfilScreen from './screen/DetailProfilScreen';
+import RiwayatTransaksiScreen from './screen/RiwayatTransaksiScreen';
+import AmbilSertifikatScreen from './screen/AmbilSertifikatScreen';
 
 import TabNotifikasi from './screen/TabNotifikasi';
 import TabTautan from './screen/TabTautan';
@@ -391,6 +394,49 @@ function MyStack(){
               cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
             }}
             component={DetailWebinarScreen} />
+             <Stack.Screen 
+            name="DetailProfil" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DetailProfilScreen} />
+              <Stack.Screen 
+            name="RiwayatTransaksi" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={RiwayatTransaksiScreen} />
+              <Stack.Screen 
+            name="AmbilSertifikat" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={AmbilSertifikatScreen} />
+
+
+
+          <Stack.Screen 
+              options={{
+                headerShown:false,
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+              }}
+            name="Landing" component={LandingScreen} />
+            <Stack.Screen 
+              options={{
+                headerShown:false,
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+              }}
+            name="Login" component={LoginScreen} />
+            <Stack.Screen 
+            name="Daftar" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={DaftarScreen} />
           </Stack.Navigator>
           </NavigationContainer>
       </GlobalContext.Provider>

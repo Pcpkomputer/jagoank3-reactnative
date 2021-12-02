@@ -9,6 +9,8 @@ import { StatusBarHeight } from '../utils/HeightUtils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { endpoint } from '../utils/endpoint';
+
+import { CommonActions } from '@react-navigation/native';
 import { GlobalContext } from '../App';
 
 
@@ -559,6 +561,15 @@ export default function DaftarScreen(props){
                                             AsyncStorage.setItem("credentials",JSON.stringify(payload));
 
                                             setDaftarLoading(false);
+
+                                            props.navigation.dispatch(
+                                                CommonActions.reset({
+                                                  index: 0,
+                                                  routes: [
+                                                    { name: 'Dashboard' },
+                                                  ],
+                                                })
+                                              );
 
                                          }
                                          else{

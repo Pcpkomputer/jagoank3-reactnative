@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ScrollView, AsyncStorage, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons,MaterialIcons, AntDesign } from '@expo/vector-icons'; 
 import Svg, { Path, Circle } from "react-native-svg"
@@ -12,6 +12,8 @@ import { useIsFocused } from '@react-navigation/native';
 
 import {extractInisial} from '../utils/utils';
 import {GlobalContext} from '../App';
+
+import { CommonActions } from '@react-navigation/native';
 
 let shadow = {
     shadowColor: "#000",
@@ -43,6 +45,11 @@ export default function TabProfil(props){
     let focused = useIsFocused();
 
     let [dataLoaded, setDataLoaded] = useState(false);
+
+
+    let globalContext = useContext(GlobalContext);
+
+    let [user, setUser] = useState(globalContext.credentials?.detail || {});
     
 
     useEffect(()=>{    
@@ -60,7 +67,6 @@ export default function TabProfil(props){
     //     }
     // },[focused])
 
-    let globalContext = useContext(GlobalContext);
 
     return (
         <View style={{flex:1,backgroundColor:"whitesmoke"}}>
@@ -85,11 +91,11 @@ export default function TabProfil(props){
                         <View style={{height:EStyleSheet.value("220rem"),marginHorizontal:EStyleSheet.value("20rem"),justifyContent:"flex-end"}}>
                             <View style={{backgroundColor:"white",height:EStyleSheet.value("145rem"),borderRadius:EStyleSheet.value("10rem")}}>
                                 <View style={{backgroundColor:"#ff5715",justifyContent:"center",alignItems:"center",alignSelf:"center",position:"absolute",borderRadius:EStyleSheet.value("10rem"),bottom:EStyleSheet.value("100rem"),width:EStyleSheet.value("100rem"),height:EStyleSheet.value("100rem")}}>
-                                    <Text style={{color:"white",fontSize:EStyleSheet.value("50rem"),fontWeight:"bold"}}>{extractInisial(globalContext.credentials.detail.nama)}</Text>
+                                    <Text style={{color:"white",fontSize:EStyleSheet.value("50rem"),fontWeight:"bold"}}>{extractInisial(user.nama)}</Text>
                                 </View>
                                 <View style={{marginTop:EStyleSheet.value("125rem")/2-EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center"}}>
-                                    <Text style={{color:"grey",fontWeight:"bold"}}>{globalContext.credentials.detail.nama}</Text>
-                                    <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem"),marginTop:EStyleSheet.value("3rem")}}>{globalContext.credentials.detail.nama}</Text>
+                                    <Text style={{color:"grey",fontWeight:"bold"}}>{globalContext.credentials===null ? "":user.nama}</Text>
+                                    <Text style={{color:"grey",fontSize:EStyleSheet.value("12rem"),marginTop:EStyleSheet.value("3rem")}}>{globalContext.credentials===null ? "":user.nama}</Text>
                                 </View>
                                 <View style={{flex:1,justifyContent:"flex-end"}}>
                                     <View style={{paddingVertical:EStyleSheet.value("7rem"),flexDirection:"row",borderTopWidth:0.5,borderColor:"grey",paddingHorizontal:EStyleSheet.value("10rem")}}>
@@ -104,30 +110,63 @@ export default function TabProfil(props){
 
                     <View style={{marginTop:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("30rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingBottom:EStyleSheet.value("10rem")}}>
                         <View style={{...shadow,backgroundColor:"white",padding:EStyleSheet.value("10rem"),borderRadius:EStyleSheet.value("7rem")}}>
-                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                            <TouchableOpacity 
+                            activeOpacity={0.7}
+                            onPress={()=>{
+                                props.navigation.navigate("DetailProfil");
+                            }}
+                            style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <Feather name="user" size={EStyleSheet.value("20rem")} color="black" />
+                                    <Feather name="user" size={EStyleSheet.value("20rem")} color="grey" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Profil</Text>
-                            </View>
-                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem"),color:"grey"}}>Profil</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            activeOpacity={0.7}
+                            onPress={()=>{
+                                props.navigation.navigate("RiwayatTransaksi");
+                            }}
+                            style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
+                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="grey" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Riwayat Transaksi</Text>
-                            </View>
-                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem"),color:"grey"}}>Riwayat Transaksi</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            activeOpacity={0.7}
+                            onPress={()=>{
+                                props.navigation.navigate("AmbilSertifikat");
+                            }}
+                            style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
+                                    <MaterialCommunityIcons name="certificate-outline" size={EStyleSheet.value("20rem")} color="grey" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Ambil Sertifikat</Text>
-                            </View>
-                            <View style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem"),color:"grey"}}>Ambil Sertifikat</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            activeOpacity={0.7}
+                            onPress={()=>{
+                                props.navigation.dispatch(
+                                    CommonActions.reset({
+                                      index: 0,
+                                      routes: [
+                                        { name: 'Landing', params:{
+                                            action:"logout"
+                                        } },
+                                      ],
+                                    })
+                                  );
+
+                                AsyncStorage.removeItem("credentials");
+                                globalContext.setCredentials({});
+                                
+                            }}
+                            style={{flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("12rem"),borderBottomWidth:0.5,borderColor:"grey"}}>
                                 <View style={{paddingHorizontal:EStyleSheet.value("5rem")}}> 
-                                    <MaterialIcons name="history" size={EStyleSheet.value("20rem")} color="black" />
+                                    <MaterialIcons name="logout" size={EStyleSheet.value("20rem")} color="grey" />
                                 </View>
-                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem")}}>Keluar</Text>
-                            </View>
+                                <Text style={{paddingHorizontal:EStyleSheet.value("10rem"),color:"grey"}}>Keluar</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>

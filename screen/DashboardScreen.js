@@ -95,7 +95,7 @@ export default function DashboardScreen(props){
                            <View style={{flex:1}}>
                                 <Text style={{color:"white",letterSpacing:EStyleSheet.value("10rem"),fontWeight:"bold"}}>PLATINUM</Text>
                                 <View style={{flex:1,justifyContent:"center"}}>
-                                    <Text numberOfLines={2} style={{color:"white",fontWeight:"bold",letterSpacing:3}}>{globalContext.credentials.detail.nama}</Text>
+                                    <Text numberOfLines={2} style={{color:"white",fontWeight:"bold",letterSpacing:3}}>{globalContext.credentials?.detail?.nama || ""}</Text>
                                     <View style={{marginTop:EStyleSheet.value("10rem"),borderWidth:0.2,justifyContent:"center",alignItems:"center",borderColor:"white",padding:EStyleSheet.value("5rem")}}>
                                         <Text style={{color:"white"}}>Non Member</Text>
                                     </View>
@@ -106,7 +106,7 @@ export default function DashboardScreen(props){
                            </View>
                            <View style={{justifyContent:"center",alignItems:"center",paddingRight:EStyleSheet.value("20rem"),paddingLeft:EStyleSheet.value("30rem")}}>
                                <View style={{backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem"),borderRadius:999}}>
-                                   <Text style={{fontSize:EStyleSheet.value("30rem")}}>{extractInisial(globalContext.credentials.detail.nama)}</Text>
+                                   <Text style={{fontSize:EStyleSheet.value("30rem")}}>{extractInisial(globalContext.credentials?.detail?.nama || "")}</Text>
                                 </View>
                            </View>
                         </LinearGradient>
