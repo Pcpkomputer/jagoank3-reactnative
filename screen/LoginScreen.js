@@ -12,12 +12,16 @@ import {endpoint} from '../utils/endpoint';
 
 import { GlobalContext } from '../App';
 
+import { CommonActions } from '@react-navigation/native';
+
 
 export default function LoginScreen(props){
 
+    let globalContext = useContext(GlobalContext);
+
     let [selectedForm,setSelectedForm] = useState(0);
 
-    let globalContext = useContext(GlobalContext);
+
 
     let refFormEmail = useRef();
     let refFormKataSandi = useRef();
@@ -62,7 +66,7 @@ export default function LoginScreen(props){
                                         setEmail(value);
                                     }}
                                     value={email}
-                                    style={{width:"100%",pƒadding:0,height:"100%",color:"grey"}}/>
+                                    style={{width:"100%",padding:0,height:"100%",color:"grey"}}/>
                                 </View>
                             </View>
                         </View>
@@ -261,6 +265,17 @@ export default function LoginScreen(props){
                                     globalContext.setCredentials(response.credentials);
                                     AsyncStorage.setItem("credentials",JSON.stringify(response.credentials));
                                     setLoginLoading(false);
+
+                                    props.navigation.dispatch(
+                                        CommonActions.reset({
+                                          index: 0,
+                                          routes: [
+                                            { name: 'Dashboard' },
+                                          ],
+                                        })
+                                      );
+
+                                    
                                 }
                                 else{
                                     setLoginLoading(false);
