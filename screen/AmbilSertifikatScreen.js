@@ -111,6 +111,13 @@ export default function AmbilSertifikatScreen(props){
                                             <Text style={{marginLeft:EStyleSheet.value("5rem"),flex:1}}>{item.status}</Text>
                                         </View>
                                         <Pressable 
+                                        onPress={()=>{
+
+                                            let idinvoice = item.id_invoicetraining;
+                                            let token = globalContext.credentials.token;
+
+                                            Linking.openURL(`${endpoint}/generatesertifikatmobile?token=${token}&id_invoice=${idinvoice}`);
+                                        }}
                                         android_ripple={{
                                             color:"white"
                                         }}
