@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, Pressable, ActivityIndicator, TextInput, Linking } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
 import Svg, { Path, Circle } from "react-native-svg"
@@ -71,7 +71,7 @@ export default function TabTautan(props){
                     <View style={{flex:1,paddingHorizontal:EStyleSheet.value("20rem"),paddingTop:EStyleSheet.value("30rem"),paddingBottom:EStyleSheet.value("10rem")}}>
                             <Pressable 
                             onPress={()=>{
-                                alert("123");
+                                Linking.openURL("https://jagoank3.com");
                             }}
                             style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
@@ -86,7 +86,7 @@ export default function TabTautan(props){
                             </Pressable>
                             <Pressable 
                             onPress={()=>{
-                                alert("333");
+                                Linking.openURL("https://www.instagram.com/Limaprimasolusindo/");
                             }}
                             style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>

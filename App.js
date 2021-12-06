@@ -129,7 +129,7 @@ function MyTabBar({ state, descriptors, navigation }) {
               navigation.navigate("DetailItemCheckoutShop");
             }}
             style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("55rem")}}>
-              <Feather name="shopping-bag" style={{marginBottom:EStyleSheet.value("3rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
+              <Feather name="shopping-bag" style={{marginBottom:EStyleSheet.value("3rem")}}  size={EStyleSheet.value("15rem")} color={"#b7b7b7"} />
               <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Shop</Text>
             </Pressable>
           );
@@ -145,8 +145,8 @@ function MyTabBar({ state, descriptors, navigation }) {
                 });
               }}
               style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
-                <Ionicons name="notifications"  style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("6rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
-                 <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Notif</Text>
+                <Ionicons name="notifications"  style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("6rem")}}  size={EStyleSheet.value("15rem")} color={(state.index===1) ? "rgb(38, 180, 149)":"#b7b7b7"} />
+                 <Text style={{color:(state.index===1) ? "rgb(38, 180, 149)":"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Notif</Text>
               </Pressable>
             );
         }
@@ -167,7 +167,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                         merge:true
                       });
                     }}
-                  style={{backgroundColor:(selectedTab==="Dashboard") ? "rgb(35, 182, 151)":"whitesmoke",overflow:"hidden",...shadow,justifyContent:"center",alignItems:"center",borderRadius:999,marginBottom:EStyleSheet.value("35rem"),width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem")}}>
+                  style={{backgroundColor:(selectedTab==="Dashboard" || state.index===0) ? "rgb(35, 182, 151)":"whitesmoke",overflow:"hidden",...shadow,justifyContent:"center",alignItems:"center",borderRadius:999,marginBottom:EStyleSheet.value("35rem"),width:EStyleSheet.value("70rem"),height:EStyleSheet.value("70rem")}}>
                     <Image style={{width:EStyleSheet.value("130rem"),height:EStyleSheet.value("130rem"),marginBottom:EStyleSheet.value("14rem"),marginRight:EStyleSheet.value("8rem")}} source={require("./assets/jagoank3.png")}/>
                     </Pressable>
                </View>
@@ -185,8 +185,8 @@ function MyTabBar({ state, descriptors, navigation }) {
               });
             }}
             style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
-              <AntDesign name="link" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
-               <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Tautan</Text>
+              <AntDesign name="link" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color={(state.index===3) ? "rgb(38, 180, 149)":"#b7b7b7"} />
+               <Text style={{color:(state.index===3) ? "rgb(38, 180, 149)":"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Tautan</Text> 
             </Pressable>
           );
       }
@@ -201,8 +201,8 @@ function MyTabBar({ state, descriptors, navigation }) {
             });
           }}
           style={{flex:1,justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
-            <FontAwesome name="user" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color="#b7b7b7" />
-            <Text style={{color:"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Profil</Text>
+            <FontAwesome name="user" style={{marginBottom:EStyleSheet.value("3rem"),marginTop:EStyleSheet.value("5rem")}}  size={EStyleSheet.value("15rem")} color={(state.index===4) ? "rgb(38, 180, 149)":"#b7b7b7"} />
+            <Text style={{color:(state.index===4) ? "rgb(38, 180, 149)":"#b7b7b7",fontSize:EStyleSheet.value("12rem"),fontWeight:"bold"}}>Profil</Text>
           </Pressable>
         );
     }

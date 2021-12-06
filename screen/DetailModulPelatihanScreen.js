@@ -28,7 +28,14 @@ export default function DetailModulPelatihanScreen(props){
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={{height:StatusBarHeight}}></View>
             <View style={{...shadow,backgroundColor:"white",flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem"),alignItems:"center",height:EStyleSheet.value("55rem")}}>
-                <Entypo name="chevron-left" size={EStyleSheet.value("20rem")}  color="rgb(38, 180, 149)" />
+            <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={()=>{
+                    props.navigation.goBack();
+                }}
+                >
+                    <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
+                </TouchableOpacity>
                 <View style={{justifyContent:"center",alignItems:"center",flex:1}}>
                     <Text numberOfLines={1} style={{fontWeight:"bold",paddingHorizontal:EStyleSheet.value("30rem"),color:"rgb(38, 180, 149)",marginRight:EStyleSheet.value("20rem")}}>Modul Pelatihan - {props.route.params.item.namatraining}</Text>
                 </View>
