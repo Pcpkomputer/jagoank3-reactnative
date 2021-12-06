@@ -19,7 +19,7 @@ export default function LandingScreen(props){
                 <Image resizeMode="stretch" style={{width:"100%",height:"100%"}} source={require("../assets/kids.png")}></Image>
             </View>
             <View style={{marginVertical:EStyleSheet.value("25rem"),paddingHorizontal:EStyleSheet.value("15rem")}}>
-                <Text style={{textAlign:"center",color:"white",lineHeight:23}}>MiCCa Pro adalah Platform Pelatihan Online bersetifikasi Kemnaker RI/BNSP bagi para Penggiat K3 atau Ahli K3 yang dikembangkan oleh Jagoan K3</Text>
+                <Text style={{textAlign:"center",color:"white",lineHeight:23}}>Jagoan K3 adalah sebuah platform pembelajaran yang bergerak di bidang jasa Consulting, Training dan Sertifikasi pada Sistem Manajemen K3, Mutu dan Lingkungan Berpengalaman lebih dari 5 Tahun dengan berbagai jenis pelanggan dari sektor Industri, Manufaktur, Migas, Konstruksi dan Umum</Text>
             </View>
             <View style={{marginVertical:EStyleSheet.value("5rem"),borderBottomWidth:EStyleSheet.value("1rem"),paddingBottom:EStyleSheet.value("30rem"),borderColor:"white",marginHorizontal:EStyleSheet.value("15rem")}}>
                 <View style={{overflow:"hidden",backgroundColor:"#f9d408",height:EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem")}}>
