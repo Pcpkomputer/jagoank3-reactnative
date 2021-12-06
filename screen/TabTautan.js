@@ -69,7 +69,11 @@ export default function TabTautan(props){
                 (dataLoaded) &&
                 <ScrollView>
                     <View style={{flex:1,paddingHorizontal:EStyleSheet.value("20rem"),paddingTop:EStyleSheet.value("30rem"),paddingBottom:EStyleSheet.value("10rem")}}>
-                            <View style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
+                            <Pressable 
+                            onPress={()=>{
+                                alert("123");
+                            }}
+                            style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
                                     <View style={{paddingHorizontal:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("5rem")}}>
                                         <MaterialCommunityIcons name="web" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
@@ -79,8 +83,12 @@ export default function TabTautan(props){
                                 <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("10rem")}}>
                                     <Entypo name="chevron-small-right" size={EStyleSheet.value("20rem")} color="black" />
                                 </View>
-                            </View>
-                            <View style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
+                            </Pressable>
+                            <Pressable 
+                            onPress={()=>{
+                                alert("333");
+                            }}
+                            style={{...shadow,marginBottom:EStyleSheet.value("15rem"),justifyContent:"flex-end",flexDirection:"row",backgroundColor:"white",borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("10rem")}}>
                                 <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
                                     <View style={{paddingHorizontal:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("5rem")}}>
                                         <Feather name="instagram" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
@@ -90,7 +98,7 @@ export default function TabTautan(props){
                                 <View style={{justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("10rem")}}>
                                     <Entypo name="chevron-small-right" size={EStyleSheet.value("20rem")} color="black" />
                                 </View>
-                            </View>
+                            </Pressable>
                     </View>
             </ScrollView>
             }
