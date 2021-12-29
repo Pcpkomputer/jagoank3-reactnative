@@ -276,7 +276,7 @@ export default function DashboardScreen(props){
                                         </View>
                                         <View style={{flex:1,justifyContent:"center"}}>
                                             <Text style={{color:"white",marginBottom:EStyleSheet.value("2rem"),fontSize:EStyleSheet.value("10rem")}}>SERTIFIKASI</Text>
-                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white",paddingRight:EStyleSheet.value("20rem")}}>Sertifikasi {item.nama_kategoritraining}</Text>
+                                            <Text numberOfLines={1} style={{fontWeight:"bold",color:"white",paddingRight:EStyleSheet.value("20rem")}}>{item.nama_kategoritraining}</Text>
                                         </View>
                                         <LinearGradient 
                                         colors={['#24b596', '#04a280', '#04a280']}

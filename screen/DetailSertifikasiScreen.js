@@ -219,8 +219,8 @@ export default function DetailSertifikasiScreen(props){
                 >
                     <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 </TouchableOpacity>
-                <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
+                <View style={{position:"absolute",justifyContent:"center",alignItems:"center",paddingHorizontal:EStyleSheet.value("50rem"),width:Dimensions.get("screen").width}}>
+                    <Text numberOfLines={1} style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
                 </View>
             </View>
             {
@@ -256,8 +256,8 @@ export default function DetailSertifikasiScreen(props){
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),zIndex:1,paddingTop:EStyleSheet.value("20rem")}}>
                         <View style={{...shadow,backgroundColor:"white",borderTopRightRadius:EStyleSheet.value("20rem"),borderTopLeftRadius:EStyleSheet.value("20rem")}}>
                             <Text style={{color:"grey",padding:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center",textAlign:"center"}}>{item.namatraining}</Text>
-                            <View style={{backgroundColor:"#e8e8e8",height:EStyleSheet.value("450rem")}}>
-                                <Image style={{width:"100%",height:"100%"}} source={{uri:`${endpoint.replace("/api","")}/storage/public/training/${item.foto}`}}></Image>
+                            <View style={{backgroundColor:"#e8e8e8",height:EStyleSheet.value("350rem")}}>
+                                <Image resizeMode="stretch" style={{width:"100%",height:"100%"}} source={{uri:`${endpoint.replace("/api","")}/storage/public/training/${item.foto}`}}></Image>
                             </View>
                             <View style={{marginTop:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                                 <Text style={{fontSize:EStyleSheet.value("12rem"),color:"grey",marginBottom:EStyleSheet.value("5rem")}}>Jadwal Training</Text>
@@ -353,7 +353,7 @@ export default function DetailSertifikasiScreen(props){
                           
                         </View>
                     </View>
-                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("90rem")}}>
+                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginBottom:EStyleSheet.value("84rem")}}>
                         <View style={{...shadow,borderBottomLeftRadius:EStyleSheet.value("30rem"),borderBottomRightRadius:EStyleSheet.value("30rem"),backgroundColor:"white"}}>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginVertical:EStyleSheet.value("20rem")}}>
                                 <View style={{backgroundColor:"#ededed",position:"relative",overflow:"hidden",height:EStyleSheet.value("40rem"),borderRadius:EStyleSheet.value("10rem")}}>

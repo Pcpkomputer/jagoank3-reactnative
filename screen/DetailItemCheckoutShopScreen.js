@@ -123,7 +123,7 @@ export default function DetailItemCheckoutShopScreen(props){
                                                 </View>
                                                 <View>
                                                     <View style={{width:EStyleSheet.value("80rem"),height:EStyleSheet.value("80rem"),backgroundColor:"whitesmoke"}}>
-                                                        <Image style={{height:"100%",width:"100%"}} source={{uri:`${endpoint}/storage/public/shop/${item.gambar_barang}`}}></Image>
+                                                        <Image style={{height:"100%",width:"100%"}} source={{uri:`${endpoint.replace("/api","")}/storage/public/shop/${item.gambar_barang}`}}></Image>
                                                     </View>
                                                 </View>
                                             </View>

@@ -42,6 +42,7 @@ export default function DetailArtikelScreen(props){
     let [imageLoaded, setImageLoaded] = useState(false);
 
     useEffect(()=>{    
+        //console.log(`${endpoint.replace("/api","")}/storage/public/artikel/${props.route.params.item.gambar_artikel}`);
         setTimeout(() => {
             setDataLoaded(true);
         }, 1000);
@@ -75,7 +76,7 @@ export default function DetailArtikelScreen(props){
                             onLoad={()=>{
                                 setImageLoaded(true);
                             }}
-                            source={{uri:`${endpoint.replace("/api","")}/storage/public/shop/${props.route.params.item.gambar_artikel}`}} style={{width:"100%",height:"100%"}}></Image>
+                            source={{uri:`${endpoint.replace("/api","")}/storage/public/artikel/${props.route.params.item.gambar_artikel}`}} style={{width:"100%",height:"100%"}}></Image>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("20rem")}}>
                            <RenderHtml

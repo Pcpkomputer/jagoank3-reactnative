@@ -219,7 +219,7 @@ export default function ListSertifikasiScreen(props){
                     <Entypo name="chevron-left" size={EStyleSheet.value("20rem")} color="rgb(38, 180, 149)" />
                 </TouchableOpacity>
                 <View style={{position:"absolute",justifyContent:"center",alignItems:"center",width:Dimensions.get("screen").width}}>
-                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>Sertifikasi {props.route.params.item.nama_kategoritraining}</Text>
+                    <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{props.route.params.item.nama_kategoritraining}</Text>
                 </View>
             </View>
             {
