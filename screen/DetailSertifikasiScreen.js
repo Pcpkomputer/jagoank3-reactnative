@@ -357,7 +357,7 @@ export default function DetailSertifikasiScreen(props){
                         <View style={{...shadow,borderBottomLeftRadius:EStyleSheet.value("30rem"),borderBottomRightRadius:EStyleSheet.value("30rem"),backgroundColor:"white"}}>
                             <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginVertical:EStyleSheet.value("20rem")}}>
                                 <View style={{backgroundColor:"#ededed",position:"relative",overflow:"hidden",height:EStyleSheet.value("40rem"),borderRadius:EStyleSheet.value("10rem")}}>
-                                    <View style={{position:"absolute",width:"50%",backgroundColor:"rgb(38, 180, 140)",height:"100%"}}></View>
+                                    <View style={{position:"absolute",width:`${(kursiTersisa/kuotaKursi)*100}%`,backgroundColor:"rgb(38, 180, 140)",height:`100%`}}></View>
                                     <Text style={{color:"black",fontWeight:"bold",textAlign:"center",height:"100%",textAlignVertical:"center"}}>Tersisa {kursiTersisa} dari {kuotaKursi}</Text>
                                 </View>
                             </View>

@@ -101,9 +101,23 @@ export default function ListSertifikasiScreen(props){
 
     let refSwiper = useRef();
 
+    let normalizedMonth = (month) =>{
+        let day = new Date(month).getDate();
+
+        if(day>=25 && day <=31){
+            let normalized = new Date(new Date(month).setDate(new Date(month).getDate()-15));
+            return normalized;
+        }
+        else{
+            return new Date(month);
+        }
+    }
+
     let getMonth = (month) =>{
 
+    
         let monthIndex = new Date(month).getMonth()+1;
+        
 
         switch (monthIndex) {
             case 1:
@@ -256,7 +270,7 @@ export default function ListSertifikasiScreen(props){
                            
                         }}
                         style={{backgroundColor:(selectedSwipeIndex===0) ? "rgb(38, 180, 149)":"white",flex:1,justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("5rem"),borderRadius:EStyleSheet.value("5rem")}}>
-                            <Text style={{color:(selectedSwipeIndex===0) ? "white":"grey"}}>{getMonth(new Date(new Date().setMonth(new Date().getMonth())).toString())}</Text>
+                            <Text style={{color:(selectedSwipeIndex===0) ? "white":"grey"}}>{getMonth(new Date(normalizedMonth(new Date()).setMonth(normalizedMonth(new Date()).getMonth())))}</Text>
                         </Pressable>
                         <Pressable 
                         android_ripple={{
@@ -276,7 +290,7 @@ export default function ListSertifikasiScreen(props){
                             }
                         }}
                         style={{backgroundColor:(selectedSwipeIndex===1) ? "rgb(38, 180, 149)":"white",flex:1,justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("5rem"),borderRadius:EStyleSheet.value("5rem")}}>
-                            <Text style={{color:(selectedSwipeIndex===1) ? "white":"grey"}}>{getMonth(new Date(new Date().setMonth(new Date().getMonth()+1)).toString())}</Text>
+                            <Text style={{color:(selectedSwipeIndex===1) ? "white":"grey"}}>{getMonth(new Date(normalizedMonth(new Date()).setMonth(normalizedMonth(new Date()).getMonth()+1)))}</Text>
                         </Pressable>
                         <Pressable 
                         android_ripple={{
@@ -300,7 +314,7 @@ export default function ListSertifikasiScreen(props){
                             }
                         }}
                         style={{backgroundColor:(selectedSwipeIndex===2) ? "rgb(38, 180, 149)":"white",flex:1,justifyContent:"center",alignItems:"center",paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("5rem"),borderRadius:EStyleSheet.value("5rem")}}>
-                            <Text style={{color:(selectedSwipeIndex===2) ? "white":"grey"}}>{getMonth(new Date(new Date().setMonth(new Date().getMonth()+2)).toString())}</Text>
+                            <Text style={{color:(selectedSwipeIndex===2) ? "white":"grey"}}>{getMonth(new Date(normalizedMonth(new Date()).setMonth(normalizedMonth(new Date()).getMonth()+2)))}</Text>
                         </Pressable>
                     </View>
                     <Swiper 
@@ -375,7 +389,7 @@ export default function ListSertifikasiScreen(props){
                                     <Pressable 
                                     onPress={()=>{
                                 
-                                        props.navigation.navigate("DetailSertifikasi");
+                                        props.navigation.navigate("DetailSertifikasi",{item:item});
                                     }}
                                     style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
                                         <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
@@ -420,7 +434,7 @@ export default function ListSertifikasiScreen(props){
                                     <Pressable 
                                     onPress={()=>{
                                 
-                                        props.navigation.navigate("DetailSertifikasi");
+                                        props.navigation.navigate("DetailSertifikasi",{item:item});
                                     }}
                                     style={{...shadow2,borderRadius:EStyleSheet.value("10rem"),backgroundColor:"white",marginBottom:EStyleSheet.value("15rem"),padding:EStyleSheet.value("20rem")}}>
                                         <Text style={{fontWeight:"bold",color:"rgb(38, 180, 149)"}}>{item.namatraining}</Text>
