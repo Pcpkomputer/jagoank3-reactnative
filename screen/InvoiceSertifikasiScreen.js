@@ -143,7 +143,7 @@ export default function InvoiceSertifikasiScreen(props){
                                         <Text style={{}}>Nomor Rekening</Text>
                                     </View>
                                     <View style={{flex:1}}>
-                                        <Text style={{fontWeight:"bold"}}>16555123129032139</Text>
+                                        <Text style={{fontWeight:"bold"}}>124-00-0994-4514 an PT LIMA PRIMA SOLUSINDO</Text>
                                     </View>
                                 </View>
                                 <View style={{borderTopWidth:0.5,flexDirection:"row",paddingVertical:EStyleSheet.value("15rem"),borderColor:"grey"}}>
@@ -155,7 +155,7 @@ export default function InvoiceSertifikasiScreen(props){
                                     </View>
                                 </View>
                                 <View style={{marginTop:EStyleSheet.value("10rem")}}>
-                                    <Text style={{lineHeight:25,color:"red",fontWeight:"bold"}}>Silakan lakukan konfirmasi pembayaran ke nomor whatsapp berikut 08180344572 setelah berhasil melakukan pembayaran.</Text>
+                                    <Text style={{lineHeight:25,color:"red",fontWeight:"bold"}}>Silakan lakukan konfirmasi pembayaran ke nomor whatsapp berikut +62 813-7747-5503 setelah berhasil melakukan pembayaran.</Text>
                                 </View>
                             </View>
                         </View>
