@@ -318,7 +318,14 @@ export default function DashboardScreen(props){
                <View style={{marginBottom:EStyleSheet.value("25rem")}}>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),flexDirection:"row",justifyContent:"space-between"}}>
                         <Text style={{fontWeight:"bold"}}>GALLERY</Text>
+                        <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={()=>{
+                            props.navigation.navigate("SeeAllGallery");
+                        }}
+                        >
                         <Text style={{fontWeight:"bold",color:"#24b596"}}>See All</Text>
+                        </TouchableOpacity>
                    </View>
                    <View style={{marginTop:EStyleSheet.value("25rem")}}>
                        {
@@ -326,14 +333,15 @@ export default function DashboardScreen(props){
                            <FlatList
                            overScrollMode="never"
                            horizontal={true}
-                           data={galeri}
+                           data={galeri.slice(0,5)}
                            showsHorizontalScrollIndicator={false}
                            contentContainerStyle={{paddingVertical:EStyleSheet.value("5rem")}}
                            keyExtractor={(item,index)=>`gallery-${index}`}
                            renderItem={({item,index})=>{
+                               //console.log(`${endpoint.replace("/api","")}/storage/public/galeri/${item.gambar}`);
                                return (
                                    <View style={{...shadow,overflow:"hidden",marginLeft:(index===0) ? EStyleSheet.value("20rem"):null,borderRadius:EStyleSheet.value("10rem"),height:EStyleSheet.value("150rem"),marginRight:EStyleSheet.value("20rem"),backgroundColor:"white",width:EStyleSheet.value("161rem")}}>
-                                       <Image resizeMode="stretch" source={{uri:`${endpoint.replace("/api","")}/storage/public/galeri/${item.gambar}`}} style={{backgroundColor:"whitesmoke",flex:1}}>
+                                       <Image source={{uri:`${endpoint.replace("/api","")}/storage/public/galeri/${item.gambar}`}} style={{backgroundColor:"whitesmoke",flex:1}}>
                                        </Image>
                                        <View style={{height:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center"}}>
                                            <Text numberOfLines={2} style={{textAlign:"center",fontSize:EStyleSheet.value("13rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>{item.judul}</Text>

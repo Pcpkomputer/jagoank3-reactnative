@@ -26,6 +26,7 @@ import DetailWebinarScreen from './screen/DetailWebinarScreen';
 import DetailProfilScreen from './screen/DetailProfilScreen';
 import RiwayatTransaksiScreen from './screen/RiwayatTransaksiScreen';
 import AmbilSertifikatScreen from './screen/AmbilSertifikatScreen';
+import SeeAllGalleryScreen from './screen/SeeAllGalleryScreen';
 
 import TabNotifikasi from './screen/TabNotifikasi';
 import TabTautan from './screen/TabTautan';
@@ -446,7 +447,13 @@ function MyStack(){
               cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
             }}
             component={AmbilSertifikatScreen} />
-
+   <Stack.Screen 
+            name="SeeAllGallery" 
+            options={{
+              headerShown:false,
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+            }}
+            component={SeeAllGalleryScreen} />
 
 
           <Stack.Screen 
